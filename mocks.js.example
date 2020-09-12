@@ -1,0 +1,32 @@
+
+// THIS FILE IS ONLY USED FOR TESTS, SET YOUR DATA IF YOU NEED UNIT TEST
+
+exports.mockUser = {
+  school: '',
+  name: '',
+  birthday: '',
+  area: '',
+  password: '',
+};
+
+exports.mockSchoolInfo = {
+  orgCode: '',
+  baseURL: '',
+};
+
+exports.mockToken =
+  '';
+
+  
+// DON'T MODIFY BELOW THIS LINE
+// DON'T MODIFY BELOW THIS LINE
+// DON'T MODIFY BELOW THIS LINE
+
+if (
+  !exports.mockUser.name ||
+  !exports.mockSchoolInfo.orgCode ||
+  !exports.mockToken
+) {
+  throw new Error(`you need to set up mock data in order to run test!
+  please open ${__filename} and set up your data`);
+}
