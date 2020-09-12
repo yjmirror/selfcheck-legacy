@@ -1,4 +1,4 @@
-# Auto-Health-SelfCheck (자가진단 v2 자동화)
+# Auto-Health-SelfCheck (자가진단 v2 자동화) ![GitHub stars](https://img.shields.io/github/stars/yj01jung/auto-health-selfcheck?style=social) [![npm version](https://badge.fury.io/js/auto-health-selfcheck.svg)](https://badge.fury.io/js/auto-health-selfcheck)
 
 #### 코로나 예방을 위해서는 자가 진단이 아니라 마스크 착용과 사회적 거리두기 그리고 손 씻기가 필요합니다.
 
@@ -6,9 +6,13 @@
 
 #### 그러므로 자가진단은 폐지되거나 차라리 매일 등교전 마스크, 손씻기 인증샷 처럼 실질적인 대책으로 변경되어야 합니다.
 
+---
+
 ## 코로나 의심 증상이 있거나 확진자와 접축하였을 경우에는 반드시 등교하지 말고 <u>담임 선생님과 연락</u>하십시오.
 
 ## 마스크 착용과 생활속 거리두기로 코로나 사태를 극복합니다!!
+
+---
 
 ### ⚡ 사용 전 유의 사항 !!
 
