@@ -20,7 +20,7 @@ describe('search school', () => {
 });
 
 describe('login with school', () => {
-  it('getes valid token', async () => {
+  it('fetches valid token', async () => {
     const token = await loginWithSchool(mockUser, mockSchoolInfo);
     expect(token.includes('Bearer')).toBeTruthy();
     const decoded = decode(token.replace('Bearer ', ''));

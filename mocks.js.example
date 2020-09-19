@@ -18,9 +18,13 @@ exports.mockToken =
   '';
 
   
-// DON'T MODIFY BELOW THIS LINE
-// DON'T MODIFY BELOW THIS LINE
-// DON'T MODIFY BELOW THIS LINE
+// -
+// -
+// ----------------------------------------------------------
+// ---           DON'T MODIFY BELOW THIS LINE             ---
+// ----------------------------------------------------------
+// -
+// -
 
 if (
   !exports.mockUser.name ||

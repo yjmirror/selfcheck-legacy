@@ -1,6 +1,6 @@
 {
   "name": "auto-health-selfcheck",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Yujun Jung <yj01jung@gmail.com>",
   "description": "hcs automation library",
   "types": "dist/index.d.ts",
@@ -25,6 +25,7 @@
     "@types/node-rsa": "^1.0.0",
     "jest": "^26.4.2",
     "jsonwebtoken": "^8.5.1",
+    "node-schedule": "^1.3.2",
     "ts-jest": "^26.3.0",
     "typescript": "^4.0.2"
   },

@@ -1,4 +1,4 @@
-import { Delay } from './util';
+import { sleep } from './util';
 import { User } from './types';
 
 import { secondLogin, loginWithSchool, searchSchool, sendSurvey } from './api';
@@ -11,14 +11,13 @@ import { secondLogin, loginWithSchool, searchSchool, sendSurvey } from './api';
  * @param delay delay between http requests
  */
 async function healthCheck(user: User, delay: number = 0) {
-  const s = new Delay(delay);
   const schoolInfo = await searchSchool(user);
-  await s.sleep();
+  await sleep(delay);
   const token = await loginWithSchool(user, schoolInfo);
-  await s.sleep();
+  await sleep(delay);
   if (user.password) {
     await secondLogin(token, user, schoolInfo);
-    await s.sleep();
+    await sleep(delay);
   }
   const surveyResult = await sendSurvey(token, schoolInfo);
   if (!surveyResult.registerDtm) throw new Error('health check failed');
