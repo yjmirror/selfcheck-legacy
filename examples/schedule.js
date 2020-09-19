@@ -12,7 +12,6 @@ const user = {
 
 /** 
  * 자세한 내용은 cron 검색
-
     *   *   *   *   *   *
     ┬   ┬   ┬   ┬   ┬   ┬
     │   │   │   │   │   │
@@ -24,11 +23,14 @@ const user = {
     └──────────────────── second (0 - 59, OPTIONAL)
 
  */
-schedule.scheduleJob('30 7 * * 1-5', d => {
-  console.log(`${d.getMonth()}월 ${d.getDay()}일 자가진단을 시작합니다`);
-  healthCheck(user)
-    .then(result => console.log('자가진단 성공', result))
-    .catch(err => console.error('오류 발생', err));
-});
+schedule.scheduleJob(
+  '30 7 * * 1-5',
+  /** @param {Date} d */ d => {
+    console.log(`${d.getMonth()}월 ${d.getDate()}일 자가진단을 시작합니다`);
+    healthCheck(user)
+      .then(result => console.log('자가진단 성공', result))
+      .catch(err => console.error('오류 발생', err));
+  }
+);
 
 console.log(`매일 아침 7시 30분에 예정됨...`);
