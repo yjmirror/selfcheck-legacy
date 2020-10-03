@@ -1,10 +1,11 @@
 {
   "name": "auto-health-selfcheck",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author": "Yujun Jung <yj01jung@gmail.com>",
   "description": "hcs automation library",
-  "types": "dist/index.d.ts",
-  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/yj01jung/auto-health-selfcheck"
@@ -12,7 +13,8 @@
   "license": "MIT",
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md"
   ],
   "dependencies": {
     "axios": "^0.20.0",
@@ -26,13 +28,14 @@
     "jest": "^26.4.2",
     "jsonwebtoken": "^8.5.1",
     "node-schedule": "^1.3.2",
+    "rimraf": "^3.0.2",
     "ts-jest": "^26.3.0",
     "typescript": "^4.0.2"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "rimraf dist && tsc --build tsconfig.cjs.json && tsc",
     "test": "jest",
-    "prepack": "yarn test && yarn build"
+    "prepack": "yarn build"
   },
   "jest": {
     "transform": {
