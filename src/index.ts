@@ -5,8 +5,6 @@ import { secondLogin, loginWithSchool, searchSchool, sendSurvey } from './api';
 
 /**
  * Auto Health Self Check Library
- * @author Yujun Jung <yj01jung@gmail.com>
- * @license MIT License
  * @param user user data
  * @param delay delay between http requests
  */

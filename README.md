@@ -64,6 +64,10 @@ function healthCheck(user: User, delay = 0): Promise<HealthCheckResult>;
 
 ### 🔨 CHANGELOG
 
+#### 2.1.0
+
+- ES Module supports
+
 #### 2.0.1
 
 - 보안 패치
