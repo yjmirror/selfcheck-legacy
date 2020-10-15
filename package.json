@@ -1,14 +1,13 @@
 {
   "name": "auto-health-selfcheck",
-  "version": "2.1.0",
-  "author": "Yujun Jung <yj01jung@gmail.com>",
+  "version": "3.0.0",
   "description": "hcs automation library",
   "types": "dist/types/index.d.ts",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yj01jung/auto-health-selfcheck"
+    "url": "https://github.com/yjmirror/auto-health-selfcheck"
   },
   "license": "MIT",
   "files": [
