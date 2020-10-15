@@ -1,4 +1,4 @@
-# Auto-Health-SelfCheck (새로운 자가진단 자동화) ![GitHub stars](https://img.shields.io/github/stars/yj01jung/auto-health-selfcheck?style=social) [![npm version](https://badge.fury.io/js/auto-health-selfcheck.svg)](https://badge.fury.io/js/auto-health-selfcheck)
+# Auto-Health-SelfCheck (새로운 자가진단 자동화) ![GitHub stars](https://img.shields.io/github/stars/yjmirror/auto-health-selfcheck?style=social) [![npm version](https://badge.fury.io/js/auto-health-selfcheck.svg)](https://badge.fury.io/js/auto-health-selfcheck)
 
 #### 코로나 예방을 위해서는 자가 진단이 아니라 마스크 착용과 사회적 거리두기 그리고 손 씻기 🚿가 필요합니다.
 
@@ -14,7 +14,7 @@
 - 사용으로 인한 모든 책임은 당연히 본인에게 있음을 숙지하시길 바랍니다.
 - 이 라이브러리는 정상 응답 (등교 가능) 만을 보낼 수 있으므로 이외의 상황에는 **절대로** 사용해서는 안됩니다.
 
-### 🏭 복잡한 사용 예시는 [examples](https://github.com/yj01jung/auto-health-selfcheck/tree/master/examples)를 참조
+### 🏭 복잡한 사용 예시는 [examples](https://github.com/yjmirror/auto-health-selfcheck/tree/master/examples)를 참조
 
 ### 🔥 쉬운 사용 방법 How To Use
 
