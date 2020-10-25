@@ -1,6 +1,6 @@
 {
   "name": "auto-health-selfcheck",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "hcs automation library",
   "types": "dist/types/index.d.ts",
   "main": "dist/cjs/index.js",
