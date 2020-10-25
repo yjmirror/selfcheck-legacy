@@ -44,7 +44,7 @@ export function inferSchoolLevel(name: string): SchoolLevel {
 }
 
 function searchSchoolApi(params: SchoolParams) {
-  return apiGetRequest<SchoolResponse>('/school', {
+  return apiGetRequest<SchoolResponse>('/v2/searchSchool', {
     params,
     baseURL: defaultBaseURL,
   });
