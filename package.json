@@ -1,7 +1,12 @@
 {
   "name": "selfcheck",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "교육부 자가진단 자동화",
+  "keywords": [
+    "자가진단",
+    "교육부",
+    "Selfcheck"
+  ],
   "types": "dist/types/index.d.ts",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
