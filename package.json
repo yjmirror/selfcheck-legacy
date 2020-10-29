@@ -1,27 +1,33 @@
 {
   "name": "selfcheck",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "description": "교육부 자가진단 자동화",
   "keywords": [
     "자가진단",
     "교육부",
     "Selfcheck"
   ],
-  "types": "dist/types/index.d.ts",
-  "main": "dist/cjs/index.js",
-  "module": "dist/es/index.js",
+  "types": "./lib/types/index.d.ts",
+  "main": "./lib/selfcheck.cjs",
+  "module": "./lib/selfcheck.mjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/yjmirror/selfcheck"
   },
+  "browser": {
+    "./lib/selfcheck.cjs": "./lib/selfcheck.browser.cjs",
+    "./lib/selfcheck.mjs": "./lib/selfcheck.browser.mjs",
+    "./src/encrypt.ts": "./src/encrypt.browser.ts"
+  },
   "license": "MIT",
   "files": [
-    "dist",
+    "lib",
     "src",
     "README.md"
   ],
   "dependencies": {
     "axios": "^0.20.0",
+    "jsencrypt": "^3.0.0-rc.1",
     "node-rsa": "^1.1.1"
   },
   "devDependencies": {
@@ -37,7 +43,11 @@
     "typescript": "^4.0.2"
   },
   "scripts": {
-    "build": "rimraf dist && tsc --build tsconfig.cjs.json && tsc",
+    "build": "rimraf lib && tsc && yarn build:node:cjs && yarn build:node:esm && yarn build:browser:cjs && yarn build:browser:esm",
+    "build:node:cjs": "esbuild src/index.ts --bundle --platform=node --minify > lib/selfcheck.cjs --format=cjs",
+    "build:node:esm": "esbuild src/index.ts --bundle --platform=node --minify > lib/selfcheck.mjs --format=esm",
+    "build:browser:cjs": "esbuild src/index.ts --bundle --platform=browser --minify > lib/selfcheck.browser.cjs --format=cjs",
+    "build:browser:esm": "esbuild src/index.ts --bundle --platform=browser --minify > lib/selfcheck.browser.mjs --format=esm",
     "test": "jest",
     "prepack": "yarn build"
   },
@@ -51,5 +61,6 @@
       "ts",
       "js"
     ]
-  }
+  },
+  "unpkg": "./lib/selfcheck.browser.mjs"
 }
