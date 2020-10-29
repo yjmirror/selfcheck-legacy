@@ -13,8 +13,8 @@
 ### How To Use
 
 ```js
-const { healthCheck } = require('selfcheck');
-
+const { selfcheck } = require('selfcheck');
+// or  import selfcheck from "selfcheck"
 const user = {
   name: '이름', // 실명, string
   school: '학교', // '학교'로 끝나는 string
@@ -23,7 +23,7 @@ const user = {
   password: '1234', // 4자리 숫자, string
 };
 
-healthCheck(user)
+selfcheck(user)
   .then(result => console.log('자가진단 성공', result))
   .catch(err => console.error('오류 발생', err));
 ```
@@ -79,6 +79,11 @@ function selfcheck(
 
 - 라이브러리 이름 변경 (auto-health-selfcheck -> selfcheck)
 
-#### TODO
+#### 4.1.0
+
+- bundle optimized
+- 브라우저 지원
+
+### TODO
 
 - 자동 업데이트 기능 (제작중) - api 변경시에 npm 업데이트 필요 없음

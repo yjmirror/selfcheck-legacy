@@ -1,0 +1,46 @@
+export declare const AREA_CODE_TABLE: {
+    readonly 서울: "01";
+    readonly 부산: "02";
+    readonly 대구: "03";
+    readonly 인천: "04";
+    readonly 광주: "05";
+    readonly 대전: "06";
+    readonly 울산: "07";
+    readonly 세종: "08";
+    readonly 경기: "10";
+    readonly 강원: "11";
+    readonly 충북: "12";
+    readonly 충남: "13";
+    readonly 전북: "14";
+    readonly 전남: "15";
+    readonly 경북: "16";
+    readonly 경남: "17";
+    readonly 제주: "18";
+};
+export declare const SCHOOL_LEVEL_TABLE: {
+    readonly 유치원: "1";
+    readonly 초등학교: "2";
+    readonly 중학교: "3";
+    readonly 고등학교: "4";
+    readonly 특수학교: "5";
+};
+export declare const PUBLIC_KEY_HEX: "30820122300d06092a864886f70d01010105000382010f003082010a0282010100f357429c22add0d547ee3e4e876f921a0114d1aaa2e6eeac6177a6a2e2565ce9593b78ea0ec1d8335a9f12356f08e99ea0c3455d849774d85f954ee68d63fc8d6526918210f28dc51aa333b0c4cdc6bf9b029d1c50b5aef5e626c9c8c9c16231c41eef530be91143627205bbbf99c2c261791d2df71e69fbc83cdc7e37c1b3df4ae71244a691c6d2a73eab7617c713e9c193484459f45adc6dd0cba1d54f1abef5b2c34dee43fc0c067ce1c140bc4f81b935c94b116cce404c5b438a0395906ff0133f5b1c6e3b2bb423c6c350376eb4939f44461164195acc51ef44a34d4100f6a837e3473e3ce2e16cedbe67ca48da301f64fc4240b878c9cc6b3d30c316b50203010001";
+export declare const HEALTHY_RESULT_BASE: {
+    readonly rspns00: "Y";
+    readonly rspns01: "1";
+    readonly rspns02: "1";
+    readonly rspns03: null;
+    readonly rspns04: null;
+    readonly rspns05: null;
+    readonly rspns06: null;
+    readonly rspns07: "0";
+    readonly rspns08: "0";
+    readonly rspns09: "0";
+    readonly rspns10: null;
+    readonly rspns11: null;
+    readonly rspns12: null;
+    readonly rspns13: null;
+    readonly rspns14: null;
+    readonly rspns15: null;
+    readonly deviceUuid: "";
+};
