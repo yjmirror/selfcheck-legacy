@@ -10,10 +10,10 @@ const defaultHeaders = {
 
 let internal: Record<string, string> = { ...defaultHeaders };
 
-export function setUserAgent(userAgent: string) {
+export function internalSetUA(userAgent: string) {
   internal['User-Agent'] = userAgent;
 }
-export function setDefaultConfig(headers: Record<string, string>) {
+export function config(headers: Record<string, string>) {
   Object.assign(internal, headers);
 }
 

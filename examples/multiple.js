@@ -1,4 +1,4 @@
-const { healthCheck } = require('auto-health-selfcheck');
+const { healthCheck } = require('selfcheck');
 
 const users = [
   {

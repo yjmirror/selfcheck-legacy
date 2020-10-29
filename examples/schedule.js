@@ -1,6 +1,6 @@
 const schedule = require('node-schedule');
 
-const { healthCheck } = require('auto-health-selfcheck');
+const { healthCheck } = require('selfcheck');
 
 const user = {
   name: '이름', // 실명, string

@@ -1,14 +1,20 @@
 import { sleep } from './util';
 import { User } from './types';
-
+import { internalSetUA } from './headers';
 import { findUser, passwordLogin, searchSchool, sendSurvey } from './api';
+export type SelfcheckOptions = {
+  delay?: number;
+  userAgent?: string;
+};
 
 /**
- * Auto Health Self Check Library
- * @param user user data
- * @param delay delay between http requests
+ * Selfcheck - 교육부 자가진단 자동화
+ * @param user 이용자 정보
+ * @param options 옵션
  */
-async function healthCheck(user: User, delay: number = 0) {
+async function selfcheck(user: User, options: SelfcheckOptions = {}) {
+  const { delay = 0, userAgent } = options;
+  if (userAgent) internalSetUA(userAgent);
   const schoolInfo = await searchSchool(user);
   await sleep(delay);
   const token = await findUser(user, schoolInfo);
@@ -20,6 +26,14 @@ async function healthCheck(user: User, delay: number = 0) {
   return surveyResult;
 }
 
-export * from './types';
-export { setUserAgent, setDefaultConfig } from './headers';
-export { healthCheck, healthCheck as default };
+export {
+  SurveyResponse as SelfcheckResult,
+  User,
+  User as HCSUser,
+} from './types';
+export {
+  selfcheck as healthCheck,
+  selfcheck,
+  selfcheck as default,
+  selfcheck as hcs,
+};

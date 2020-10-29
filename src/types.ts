@@ -52,3 +52,8 @@ export type SchoolLevel =
   | '특수학교';
 
 export type SchoolLevelCode = '1' | '2' | '3' | '4' | '5';
+
+export type SurveyResponse = {
+  registerDtm: string;
+  inveYmd: string;
+};
