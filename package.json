@@ -1,13 +1,13 @@
 {
-  "name": "auto-health-selfcheck",
-  "version": "4.0.0",
-  "description": "hcs automation library",
+  "name": "selfcheck",
+  "version": "4.0.1",
+  "description": "교육부 자가진단 자동화",
   "types": "dist/types/index.d.ts",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yjmirror/auto-health-selfcheck"
+    "url": "https://github.com/yjmirror/selfcheck"
   },
   "license": "MIT",
   "files": [
