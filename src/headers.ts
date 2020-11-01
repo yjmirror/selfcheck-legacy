@@ -1,21 +1,4 @@
-const defaultHeaders = {
-  'Accept-Encoding': 'gzip, deflate, br',
-  'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-  'Cache-Control': 'no-cache',
-  Connection: 'keep-alive',
-  Pragma: 'no-cache',
-  'User-Agent':
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36',
-} as const;
-
-let internal: Record<string, string> = { ...defaultHeaders };
-
-export function internalSetUA(userAgent: string) {
-  internal['User-Agent'] = userAgent;
-}
-export function config(headers: Record<string, string>) {
-  Object.assign(internal, headers);
-}
+import store from './configStore';
 
 type HeaderTemplate = (
   headers?: Record<string, string> | null
@@ -24,8 +7,8 @@ type HeaderTemplate = (
 function createTemplate(base: Record<string, string>): HeaderTemplate {
   return headers => {
     return headers
-      ? { ...base, ...internal, ...headers }
-      : { ...base, ...internal };
+      ? { ...base, ...store.headers, ...headers }
+      : { ...base, ...store.headers };
   };
 }
 

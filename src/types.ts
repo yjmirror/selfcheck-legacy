@@ -1,9 +1,24 @@
 export interface User {
+  /**
+   * 실명
+   */
   name: string;
+  /**
+   * 학교명
+   */
   school: string;
+  /**
+   * 지역명
+   */
   area: string;
+  /**
+   * 생일 (YYMMDD)
+   */
   birthday: string;
-  password: string;
+  /**
+   * 자가진단 비밀번호 (선택)
+   */
+  password?: string;
 }
 
 export type Area =
@@ -50,8 +65,6 @@ export type SchoolLevel =
   | '중학교'
   | '고등학교'
   | '특수학교';
-
-export type SchoolLevelCode = '1' | '2' | '3' | '4' | '5';
 
 export type SurveyResponse = {
   registerDtm: string;

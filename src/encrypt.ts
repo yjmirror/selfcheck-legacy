@@ -1,8 +1,8 @@
 import NodeRSA from 'node-rsa';
-import { PUBLIC_KEY_HEX } from './constants';
+import store from './configStore';
 let encoder: NodeRSA | null = null;
 export function encrypt(payload: string) {
-  if (!encoder) encoder = loadKey(PUBLIC_KEY_HEX);
+  if (!encoder) encoder = loadKey(store.publicKey);
   return encoder.encrypt(payload, 'base64');
 }
 

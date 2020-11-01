@@ -5,27 +5,29 @@ interface ApiOptions extends AxiosRequestConfig {
   token?: string;
 }
 
-export function apiGetRequest<R>(
+export async function apiGetRequest<R>(
   api: string,
   { token, baseURL, ...options }: ApiOptions
 ) {
-  return axios.get<R>(api, {
+  const { data } = await axios.get<R>(api, {
     headers: apiHeaders(injectToken(token)),
     baseURL: baseURL && normalizeUrl(baseURL),
     ...options,
   });
+  return data;
 }
 
-export function apiPostRequest<T, R>(
+export async function apiPostRequest<T>(
   api: string,
-  data: T,
+  request: any,
   { token, baseURL, ...options }: ApiOptions
 ) {
-  return axios.post<R>(api, data, {
+  const { data } = await axios.post<T>(api, request, {
     headers: apiHeaders(injectToken(token)),
     baseURL: baseURL && normalizeUrl(baseURL),
     ...options,
   });
+  return data;
 }
 
 function injectToken(token?: string) {

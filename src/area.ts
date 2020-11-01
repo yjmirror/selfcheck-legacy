@@ -5,7 +5,7 @@ export function normalizeArea(area: string): Area {
   else if (area.includes('북')) return toArea(area[0] + '북');
   else return toArea(area.slice(0, 2));
 }
-export function toArea(area: string): Area {
+function toArea(area: string): Area {
   if (AREAS.includes(area)) return area as Area;
   else throw new Error(`Unexpected area "${area}"`);
 }

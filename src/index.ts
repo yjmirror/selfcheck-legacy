@@ -1,39 +1,31 @@
-import { sleep } from './util';
+import { loadRuntime } from './runtimeLoader';
 import { User } from './types';
-import { internalSetUA } from './headers';
-import { findUser, passwordLogin, searchSchool, sendSurvey } from './api';
-export type SelfcheckOptions = {
-  delay?: number;
-  userAgent?: string;
-};
-
+import store from './configStore';
+import { context } from './context';
+import { API_TYPE } from './runtime/api';
+export type SelfcheckResult = API_TYPE.SEND_SURVEY_RESULT;
+export class SelfcheckError extends Error {}
 /**
  * Selfcheck - 교육부 자가진단 자동화
  * @param user 이용자 정보
  * @param options 옵션
  */
-async function selfcheck(user: User, options: SelfcheckOptions = {}) {
-  const { delay = 0, userAgent } = options;
-  if (userAgent) internalSetUA(userAgent);
-  const schoolInfo = await searchSchool(user);
-  await sleep(delay);
-  const token = await findUser(user, schoolInfo);
-  await sleep(delay);
-  const userInfo = await passwordLogin(token, user, schoolInfo);
-  await sleep(delay);
-  const surveyResult = await sendSurvey(token, userInfo, schoolInfo);
-  if (!surveyResult.registerDtm) throw new Error('health check failed');
-  return surveyResult;
+async function selfcheck(user: User): Promise<SelfcheckResult> {
+  if (!store.manualUpdate || !store.runtime) await loadRuntime();
+  if (!store.runtime) throw new SelfcheckError('cannot load runtime');
+  const result = await (store.runtime
+    .function as typeof import('./runtime').default)(user, context);
+  if (result.inveYmd && result.registerDtm) return result;
+  else throw new SelfcheckError('SELFCHECK_FAILED');
 }
 
-export {
-  SurveyResponse as SelfcheckResult,
-  User,
-  User as HCSUser,
-} from './types';
+export { User, User as HCSUser } from './types';
+
 export {
   selfcheck as healthCheck,
   selfcheck,
   selfcheck as default,
   selfcheck as hcs,
 };
+export { loadRuntime as manualUpdate } from './runtimeLoader';
+export { disableAutoUpdate } from './configStore';

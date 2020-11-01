@@ -31,28 +31,35 @@ selfcheck(user)
 ### 📚 문서 Documents
 
 ```ts
-type User = {
+export interface User {
+  /**
+   * 실명
+   */
   name: string;
+  /**
+   * 학교명
+   */
   school: string;
+  /**
+   * 지역명
+   */
   area: string;
+  /**
+   * 생일 (YYMMDD)
+   */
   birthday: string;
-  password: string;
-};
-
-type SelfcheckOptions = {
-  delay?: number;
-  userAgent?: string;
-};
+  /**
+   * 자가진단 비밀번호 (선택)
+   */
+  password?: string;
+}
 
 type SelfcheckResult = {
   registerDtm: string;
   inveYmd: string;
 };
 
-function selfcheck(
-  user: User,
-  options?: SelfcheckOptions
-): Promise<SelfcheckResult>;
+function selfcheck(user: User): Promise<SelfcheckResult>;
 ```
 
 ### 🔨 CHANGELOG
@@ -82,8 +89,15 @@ function selfcheck(
 #### 4.1.0
 
 - bundle optimized
-- 브라우저 지원
+
+#### 4.2.0
+
+- 비밀번호 인증 기본 비활성화
+
+#### 5.0.0
+
+- Runtime 업데이트 도입, npm 업데이트 필요 없이 자동으로 업데이트
 
 ### TODO
 
-- 자동 업데이트 기능 (제작중) - api 변경시에 npm 업데이트 필요 없음
+- api 안정화
