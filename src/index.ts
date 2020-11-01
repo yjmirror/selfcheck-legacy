@@ -21,7 +21,7 @@ async function selfcheck(user: User): Promise<SelfcheckResult> {
     else throw new SelfcheckError('SELFCHECK_FAILED');
   } catch (err) {
     console.log(err);
-    throw Object.assign(new SelfcheckError('HCS_FAILED'), err);
+    throw err;
   }
 }
 

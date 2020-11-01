@@ -116,3 +116,4 @@ dist
 .pnp.*
 
 mocks.js
+__test__.js

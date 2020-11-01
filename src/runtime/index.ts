@@ -131,9 +131,7 @@ export default async (user: User, ctx: ContextType) => {
   const rt = new Runtime(user, ctx);
   try {
     await rt.searchSchool();
-    console.log(rt.schoolInfo);
     await rt.getToken();
-    console.log(rt.token);
     return rt.sendSurvey();
   } catch (e) {
     console.error(e);

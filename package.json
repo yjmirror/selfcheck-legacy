@@ -42,10 +42,10 @@
   },
   "scripts": {
     "build": "rimraf lib && mkdir lib && yarn build:runtime && tsc && yarn build:node:cjs && yarn build:node:esm && yarn build:browser:cjs && yarn build:browser:esm",
-    "build:node:cjs": "esbuild src/index.ts --bundle --platform=node > lib/selfcheck.cjs --format=cjs",
-    "build:node:esm": "esbuild src/index.ts --bundle --platform=node > lib/selfcheck.mjs --format=esm",
-    "build:browser:cjs": "esbuild src/index.ts --bundle --platform=browser > lib/selfcheck.browser.cjs --format=cjs",
-    "build:browser:esm": "esbuild src/index.ts --bundle --platform=browser > lib/selfcheck.browser.mjs --format=esm",
+    "build:node:cjs": "esbuild src/index.ts --bundle --platform=node --minify > lib/selfcheck.cjs --format=cjs",
+    "build:node:esm": "esbuild src/index.ts --bundle --platform=node --minify > lib/selfcheck.mjs --format=esm",
+    "build:browser:cjs": "esbuild src/index.ts --bundle --platform=browser --minify > lib/selfcheck.browser.cjs --format=cjs",
+    "build:browser:esm": "esbuild src/index.ts --bundle --platform=browser --minify > lib/selfcheck.browser.mjs --format=esm",
     "build:runtime": "node build-runtime.js",
     "prepack": "yarn build"
   }
