@@ -6,6 +6,7 @@ const { outputFiles } = esbuild.buildSync({
   bundle: true,
   format: 'cjs',
   charset: 'utf8',
+  platform: 'node',
   write: false,
 });
 const [{ contents }] = outputFiles;

@@ -2,7 +2,7 @@ import { Area, User, SchoolLevel } from '../types';
 import { ContextType } from '../context';
 import { API_TYPE, API_URL } from './api';
 import { normalizeArea } from '../area';
-
+import assert from 'assert';
 type SchoolInfo = { orgCode: string; baseURL: string };
 
 class Runtime {
@@ -33,6 +33,7 @@ class Runtime {
   async getToken() {
     const { name, birthday } = this.user;
     const { orgCode, baseURL } = this.schoolInfo;
+    assert(orgCode && baseURL, 'cannot find school');
     const request = {
       name: this.ctx.encrypt(name),
       birthday: this.ctx.encrypt(birthday),

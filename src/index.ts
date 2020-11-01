@@ -13,10 +13,14 @@ export class SelfcheckError extends Error {}
 async function selfcheck(user: User): Promise<SelfcheckResult> {
   if (!store.manualUpdate || !store.runtime) await loadRuntime();
   if (!store.runtime) throw new SelfcheckError('cannot load runtime');
-  const result = await (store.runtime
-    .function as typeof import('./runtime').default)(user, context);
-  if (result.inveYmd && result.registerDtm) return result;
-  else throw new SelfcheckError('SELFCHECK_FAILED');
+  try {
+    const result = await (store.runtime
+      .function as typeof import('./runtime').default)(user, context);
+    if (result.inveYmd && result.registerDtm) return result;
+    else throw new SelfcheckError('SELFCHECK_FAILED');
+  } catch (err) {
+    throw Object.assign(new SelfcheckError('HCS_FAILED'), err);
+  }
 }
 
 export { User, User as HCSUser } from './types';
