@@ -12,13 +12,15 @@ export class SelfcheckError extends Error {}
  */
 async function selfcheck(user: User): Promise<SelfcheckResult> {
   if (!store.manualUpdate || !store.runtime) await loadRuntime();
-  if (!store.runtime) throw new SelfcheckError('cannot load runtime');
+  if (!store.runtime || !store.runtime.function)
+    throw new SelfcheckError('cannot load runtime');
   try {
     const result = await (store.runtime
       .function as typeof import('./runtime').default)(user, context);
     if (result.inveYmd && result.registerDtm) return result;
     else throw new SelfcheckError('SELFCHECK_FAILED');
   } catch (err) {
+    console.log(err);
     throw Object.assign(new SelfcheckError('HCS_FAILED'), err);
   }
 }

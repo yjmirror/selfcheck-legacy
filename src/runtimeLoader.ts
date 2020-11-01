@@ -9,6 +9,15 @@ export interface RuntimePayload {
 }
 
 export async function loadRuntime() {
+  // if (process.env.NODE_ENV === 'fuck') {
+  //   const { code, version, options } = require('../lib/runtime.json');
+  //   if (options) Object.assign(store, options);
+  //   const runtime: Runtime = {
+  //     function: interop(new Function(wrap(code))()),
+  //     version,
+  //   };
+  //   store.runtime = runtime;
+  // } else {
   const {
     data: { code, version, options },
   } = await axios.get<RuntimePayload>(RUNTIME_PATH);
@@ -18,6 +27,7 @@ export async function loadRuntime() {
     version,
   };
   store.runtime = runtime;
+  // }
 }
 
 function wrap(code: string) {

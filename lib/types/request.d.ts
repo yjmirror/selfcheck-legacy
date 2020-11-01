@@ -4,5 +4,4 @@ interface ApiOptions extends AxiosRequestConfig {
 }
 export declare function apiGetRequest<R>(api: string, { token, baseURL, ...options }: ApiOptions): Promise<R>;
 export declare function apiPostRequest<T>(api: string, request: any, { token, baseURL, ...options }: ApiOptions): Promise<T>;
-export declare const defaultBaseURL = "hcs.eduro.go.kr";
 export {};

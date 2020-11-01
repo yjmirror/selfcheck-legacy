@@ -37,5 +37,3 @@ function injectToken(token?: string) {
 function normalizeUrl(url: string) {
   return url.startsWith('https://') ? url : `https://${url}`;
 }
-
-export const defaultBaseURL = 'hcs.eduro.go.kr';

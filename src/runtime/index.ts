@@ -2,7 +2,6 @@ import { Area, User, SchoolLevel } from '../types';
 import { ContextType } from '../context';
 import { API_TYPE, API_URL } from './api';
 import { normalizeArea } from '../area';
-import assert from 'assert';
 type SchoolInfo = { orgCode: string; baseURL: string };
 
 class Runtime {
@@ -26,6 +25,7 @@ class Runtime {
         orgName: school,
         currentPageNo: 1,
       },
+      baseURL: defaultBaseURL,
     });
     this.schoolInfo = { orgCode, baseURL: atptOfcdcConctUrl };
   }
@@ -33,7 +33,6 @@ class Runtime {
   async getToken() {
     const { name, birthday } = this.user;
     const { orgCode, baseURL } = this.schoolInfo;
-    assert(orgCode && baseURL, 'cannot find school');
     const request = {
       name: this.ctx.encrypt(name),
       birthday: this.ctx.encrypt(birthday),
@@ -53,6 +52,7 @@ class Runtime {
   }
   async sendSurvey() {
     const request = {
+      deviceUuid: '',
       rspns00: 'Y',
       rspns01: '1',
       rspns02: '1',
@@ -69,14 +69,13 @@ class Runtime {
       rspns13: null,
       rspns14: null,
       rspns15: null,
-      deviceUuid: '',
       upperToken: this.token,
       upperUserNameEncpt: this.user.name,
     };
     return await this.ctx.post<API_TYPE.SEND_SURVEY_RESULT>(
       API_URL.SEND_SURVEY_RESULT,
       request,
-      this.schoolInfo
+      { baseURL: this.schoolInfo.baseURL, token: this.token }
     );
   }
 }
@@ -132,10 +131,13 @@ export default async (user: User, ctx: ContextType) => {
   const rt = new Runtime(user, ctx);
   try {
     await rt.searchSchool();
+    console.log(rt.schoolInfo);
     await rt.getToken();
+    console.log(rt.token);
     return rt.sendSurvey();
   } catch (e) {
     console.error(e);
     throw e;
   }
 };
+const defaultBaseURL = 'hcs.eduro.go.kr';
