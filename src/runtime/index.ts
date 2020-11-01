@@ -130,7 +130,12 @@ function getAreaCode(a: Area) {
 
 export default async (user: User, ctx: ContextType) => {
   const rt = new Runtime(user, ctx);
-  await rt.searchSchool();
-  await rt.getToken();
-  return rt.sendSurvey();
+  try {
+    await rt.searchSchool();
+    await rt.getToken();
+    return rt.sendSurvey();
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 };
