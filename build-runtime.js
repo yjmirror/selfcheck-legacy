@@ -1,5 +1,5 @@
 const esbuild = require('esbuild');
-const { writeJSONSync } = require('fs-extra');
+const { writeJSONSync, readJSONSync } = require('fs-extra');
 const { outputFiles } = esbuild.buildSync({
   entryPoints: ['./src/runtime/index.ts'],
   minify: true,
@@ -11,6 +11,8 @@ const { outputFiles } = esbuild.buildSync({
 });
 const [{ contents }] = outputFiles;
 const code = Buffer.from(contents.buffer).toString('utf8');
-const { runtimeVersion } = require('./package.json');
-const runtimePayload = { code, version: runtimeVersion, options: {} };
+const pkg = readJSONSync('./package.json');
+pkg.runtimeVersion++;
+writeJSONSync('./package.json', pkg, { spaces: 2 });
+const runtimePayload = { code, version: pkg.runtimeVersion, options: {} };
 writeJSONSync('./lib/runtime.json', runtimePayload);
