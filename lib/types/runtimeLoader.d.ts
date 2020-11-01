@@ -1,3 +1,6 @@
+declare global {
+    const RUNTIME_VERSION: number;
+}
 export interface RuntimePayload {
     code: string;
     version: number;
