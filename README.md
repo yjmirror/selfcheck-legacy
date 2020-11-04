@@ -121,6 +121,18 @@ function manualUpdate(): Promise<void>;
 
 - doc 추가
 
+#### 5.1.0
+
+- 빌드 시스템 개편
+
+#### 5.2.0
+
+- debug 추가
+
+#### 5.2.1
+
+- debug 버그 수정
+
 ### TODO
 
 - api 안정화

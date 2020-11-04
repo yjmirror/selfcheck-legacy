@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { RUNTIME_PATH } from './constants';
 import store, { Runtime } from './configStore';
+import debug from './debug';
 
 declare var __BUNDLED_RUNTIME__: string;
 const bundledRuntime: RuntimePayload = JSON.parse(__BUNDLED_RUNTIME__);
@@ -15,7 +16,9 @@ export interface RuntimePayload {
  * 런타임을 업데이트
  */
 export async function loadRuntime() {
+  debug.log('loading runtime');
   let { data: payload } = await axios.get<RuntimePayload>(RUNTIME_PATH);
+  debug.log('loaded runtime');
   setRuntime(payload);
 }
 

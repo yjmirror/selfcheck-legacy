@@ -35,6 +35,7 @@ const terser = require('terser');
       minify: true,
       bundle: true,
       define: {
+        __IS_NODE__: platform === 'node',
         __RUNTIME_VERSION__: pkg.runtimeVersion,
         __BUNDLED_RUNTIME__: JSON.stringify(JSON.stringify(runtimePayload)),
       },

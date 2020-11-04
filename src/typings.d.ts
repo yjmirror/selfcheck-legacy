@@ -5,3 +5,12 @@ declare module 'jsencrypt' {
     encrypt(key: string): string;
   }
 }
+
+declare module 'debug/src/node' {
+  import debug from 'debug';
+  export = debug;
+}
+declare module 'debug/src/browser' {
+  import debug from 'debug';
+  export = debug;
+}

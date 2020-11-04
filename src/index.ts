@@ -3,6 +3,7 @@ import { User } from './types';
 import store from './configStore';
 import { context } from './context';
 import { API_TYPE } from './runtime/api';
+import debug from './debug';
 
 export type SelfcheckResult = API_TYPE.SEND_SURVEY_RESULT;
 export class SelfcheckError extends Error {}
@@ -17,8 +18,10 @@ async function selfcheck(user: User): Promise<SelfcheckResult> {
   if (!store.runtime || typeof store.runtime.function !== 'function')
     throw new SelfcheckRuntimeError('cannot load runtime');
   try {
+    debug.log('selfcheck start');
     const result = await (store.runtime
       .function as typeof import('./runtime').default)(user, context);
+    debug.log(result);
     if (result.inveYmd && result.registerDtm) return result;
     else throw new SelfcheckNetworkError('SELFCHECK_FAILED');
   } catch (err) {
