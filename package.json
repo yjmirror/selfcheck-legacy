@@ -1,6 +1,6 @@
 {
   "name": "selfcheck",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "교육부 자가진단 자동화",
   "keywords": [
     "자가진단",
@@ -8,7 +8,7 @@
     "Selfcheck"
   ],
   "types": "./lib/types/index.d.ts",
-  "runtimeVersion": 58,
+  "runtimeVersion": 61,
   "main": "./lib/selfcheck.cjs",
   "module": "./lib/selfcheck.mjs",
   "repository": {
@@ -18,7 +18,8 @@
   "browser": {
     "./lib/selfcheck.cjs": "./lib/selfcheck.browser.cjs",
     "./lib/selfcheck.mjs": "./lib/selfcheck.browser.mjs",
-    "./src/encrypt.ts": "./src/encrypt.browser.ts"
+    "./src/encrypt.ts": "./src/encrypt.browser.ts",
+    "./src/debug.ts": "./src/debug.browser.ts"
   },
   "license": "MIT",
   "files": [
