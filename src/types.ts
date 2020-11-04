@@ -59,13 +59,6 @@ export type AreaCode =
   | '17'
   | '18';
 
-export type SchoolLevel =
-  | '유치원'
-  | '초등학교'
-  | '중학교'
-  | '고등학교'
-  | '특수학교';
-
 export type SurveyResponse = {
   registerDtm: string;
   inveYmd: string;

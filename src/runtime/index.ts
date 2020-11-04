@@ -1,46 +1,50 @@
-import { Area, User, SchoolLevel } from '../types';
+import { Area, User } from '../types';
 import { ContextType } from '../context';
 import { API_TYPE, SEARCH_SCHOOL, SEND_SURVEY_RESULT, FIND_USER } from './api';
 import { normalizeArea } from '../area';
-type SchoolInfo = { orgCode: string; baseURL: string };
+
+type SchoolInfo = { $$orgCode$$: string; $$baseURL$$: string };
 
 class Runtime {
-  ctx: ContextType;
-  user: User;
-  token!: string;
-  schoolInfo!: SchoolInfo;
+  $$ctx$$: ContextType;
+  $$user$$: User;
+  $$token$$!: string;
+  $$schoolInfo$$!: SchoolInfo;
   constructor(user: User, ctx: ContextType) {
-    this.ctx = ctx;
-    this.user = user;
+    this.$$ctx$$ = ctx;
+    this.$$user$$ = user;
   }
-  async searchSchool() {
-    const { school, area } = this.user;
+  async $$searchSchool$$() {
+    const { school, area } = this.$$user$$;
 
     const {
       schulList: [{ orgCode, atptOfcdcConctUrl }],
-    } = await this.ctx.get<API_TYPE.SEARCH_SCHOOL>(SEARCH_SCHOOL, {
+    } = await this.$$ctx$$.get<API_TYPE.SEARCH_SCHOOL>(SEARCH_SCHOOL, {
       params: {
-        schulCrseScCode: getSchoolLevelCode(inferSchoolLevel(school)),
+        schulCrseScCode: inferSchoolLevel(school),
         lctnScCode: getAreaCode(normalizeArea(area)),
         orgName: school,
         currentPageNo: 1,
       },
-      baseURL: defaultBaseURL,
+      baseURL: 'hcs.eduro.go.kr',
     });
-    this.schoolInfo = { orgCode, baseURL: atptOfcdcConctUrl };
+    this.$$schoolInfo$$ = {
+      $$orgCode$$: orgCode,
+      $$baseURL$$: atptOfcdcConctUrl,
+    };
   }
 
-  async getToken() {
-    const { name, birthday } = this.user;
-    const { orgCode, baseURL } = this.schoolInfo;
+  async $$getToken$$() {
+    const { name, birthday } = this.$$user$$;
+    const { $$orgCode$$: orgCode, $$baseURL$$: baseURL } = this.$$schoolInfo$$;
     const request = {
-      name: this.ctx.encrypt(name),
-      birthday: this.ctx.encrypt(birthday),
+      name: this.$$ctx$$.encrypt(name),
+      birthday: this.$$ctx$$.encrypt(birthday),
       orgCode,
       loginType: 'school',
       stdntPNo: null,
     };
-    const { token } = await this.ctx.post<API_TYPE.FIND_USER>(
+    const { token } = await this.$$ctx$$.post<API_TYPE.FIND_USER>(
       FIND_USER,
       request,
       {
@@ -48,9 +52,9 @@ class Runtime {
       }
     );
 
-    this.token = token;
+    this.$$token$$ = token;
   }
-  async sendSurvey() {
+  async $$sendRequest$$() {
     const request = {
       deviceUuid: '',
       rspns00: 'Y',
@@ -69,40 +73,37 @@ class Runtime {
       rspns13: null,
       rspns14: null,
       rspns15: null,
-      upperToken: this.token,
-      upperUserNameEncpt: this.user.name,
+      upperToken: this.$$token$$,
+      upperUserNameEncpt: this.$$user$$.name,
     };
-    return await this.ctx.post<API_TYPE.SEND_SURVEY_RESULT>(
+    return await this.$$ctx$$.post<API_TYPE.SEND_SURVEY_RESULT>(
       SEND_SURVEY_RESULT,
       request,
-      { baseURL: this.schoolInfo.baseURL, token: this.token }
+      { baseURL: this.$$schoolInfo$$.$$baseURL$$, token: this.$$token$$ }
     );
   }
 }
 
-function inferSchoolLevel(name: string): SchoolLevel {
+function inferSchoolLevel(name: string) {
+  const SCHOOL_LEVEL_유치원 = '1';
+  const SCHOOL_LEVEL_초등학교 = '2';
+  const SCHOOL_LEVEL_중학교 = '3';
+  const SCHOOL_LEVEL_고등학교 = '4';
+  const SCHOOL_LEVEL_특수학교 = '5';
   if (name.endsWith('학교')) {
-    if (name.endsWith('초등학교')) return '초등학교';
-    else if (name.endsWith('중학교')) return '중학교';
-    else if (name.endsWith('고등학교')) return '고등학교';
-    return '특수학교';
+    if (name.endsWith('초등학교')) return SCHOOL_LEVEL_초등학교;
+    else if (name.endsWith('중학교')) return SCHOOL_LEVEL_중학교;
+    else if (name.endsWith('고등학교')) return SCHOOL_LEVEL_고등학교;
+    return SCHOOL_LEVEL_특수학교;
   } else {
     const lastChar = name[name.length - 1];
-    if (lastChar === '초') return '초등학교';
-    else if (lastChar === '중') return '중학교';
-    else if (lastChar === '고') return '고등학교';
-    else if (name.includes('유치') || lastChar === '집') return '유치원';
+    if (lastChar === '초') return SCHOOL_LEVEL_초등학교;
+    else if (lastChar === '중') return SCHOOL_LEVEL_중학교;
+    else if (lastChar === '고') return SCHOOL_LEVEL_고등학교;
+    else if (name.includes('유치') || lastChar === '집')
+      return SCHOOL_LEVEL_유치원;
     else throw new Error('unexpected school name');
   }
-}
-function getSchoolLevelCode(s: SchoolLevel) {
-  return {
-    유치원: '1',
-    초등학교: '2',
-    중학교: '3',
-    고등학교: '4',
-    특수학교: '5',
-  }[s];
 }
 
 function getAreaCode(a: Area) {
@@ -130,12 +131,11 @@ function getAreaCode(a: Area) {
 export default async (user: User, ctx: ContextType) => {
   const rt = new Runtime(user, ctx);
   try {
-    await rt.searchSchool();
-    await rt.getToken();
-    return rt.sendSurvey();
+    await rt.$$searchSchool$$();
+    await rt.$$getToken$$();
+    return rt.$$sendRequest$$();
   } catch (e) {
     console.error(e);
     throw e;
   }
 };
-const defaultBaseURL = 'hcs.eduro.go.kr';

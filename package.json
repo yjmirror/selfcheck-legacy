@@ -8,7 +8,7 @@
     "Selfcheck"
   ],
   "types": "./lib/types/index.d.ts",
-  "runtimeVersion": 27,
+  "runtimeVersion": 51,
   "main": "./lib/selfcheck.cjs",
   "module": "./lib/selfcheck.mjs",
   "repository": {
@@ -38,6 +38,7 @@
     "jsencrypt": "^3.0.0-rc.1",
     "node-rsa": "^1.1.1",
     "rimraf": "^3.0.2",
+    "terser": "^5.3.8",
     "typescript": "^4.0.2"
   },
   "scripts": {
