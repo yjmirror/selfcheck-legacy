@@ -58,8 +58,27 @@ type SelfcheckResult = {
   registerDtm: string;
   inveYmd: string;
 };
-
+/**
+ * 자가진단을 수행
+ * @param user 자가진단을 수행할 사용자 정보
+ */
 function selfcheck(user: User): Promise<SelfcheckResult>;
+
+/**
+ * 런타임 버전을 확인
+ */
+function getRuntimeVersion(): number;
+
+/**
+ * 자동 업데이트 비활성화
+ */
+function disableUpdate(): void;
+
+/**
+ * ! disableUpdate()를 통해 자동 업데이트가 꺼져 있을 때에만 사용하시오
+ * 런타임 수동 업데이트
+ */
+function manualUpdate(): Promise<void>;
 ```
 
 ### 🔨 CHANGELOG
@@ -97,6 +116,10 @@ function selfcheck(user: User): Promise<SelfcheckResult>;
 #### 5.0.0
 
 - Runtime 업데이트 도입, npm 업데이트 필요 없이 자동으로 업데이트
+
+#### 5.0.2
+
+- doc 추가
 
 ### TODO
 

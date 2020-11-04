@@ -10,4 +10,7 @@ export interface Runtime {
 }
 declare const config: ConfigStore;
 export default config;
+/**
+ * 자동 업데이트를 비활성화
+ */
 export declare function disableAutoUpdate(): void;

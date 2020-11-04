@@ -10,13 +10,16 @@ const { outputFiles } = esbuild.buildSync({
   platform: 'node',
   write: false,
 });
+
 const [{ contents }] = outputFiles;
 const code = Buffer.from(contents.buffer).toString('utf8');
 const pkg = readJSONSync('./package.json');
+
 pkg.runtimeVersion++;
 writeJSONSync('./package.json', pkg, { spaces: 2 });
 const runtimePayload = { code, version: pkg.runtimeVersion, options: {} };
 writeJSONSync('./lib/runtime.json', runtimePayload);
+
 function builds(format, platform) {
   esbuild.buildSync({
     entryPoints: ['./src/index.ts'],
@@ -34,8 +37,10 @@ function builds(format, platform) {
     }`,
   });
 }
+// cjs builds
 builds('cjs', 'node');
 builds('cjs', 'browser');
 
+// esm builds
 builds('esm', 'node');
 builds('esm', 'browser');

@@ -8,6 +8,7 @@ export interface Runtime {
   version: number;
   function: Function;
 }
+
 const config: ConfigStore = {
   headers: {
     'Accept-Encoding': 'gzip, deflate, br',
@@ -24,6 +25,9 @@ const config: ConfigStore = {
 
 export default config;
 
+/**
+ * 자동 업데이트를 비활성화
+ */
 export function disableAutoUpdate() {
   config.manualUpdate = true;
 }

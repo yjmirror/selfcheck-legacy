@@ -1,6 +1,6 @@
 import { Area, User, SchoolLevel } from '../types';
 import { ContextType } from '../context';
-import { API_TYPE, API_URL } from './api';
+import { API_TYPE, SEARCH_SCHOOL, SEND_SURVEY_RESULT, FIND_USER } from './api';
 import { normalizeArea } from '../area';
 type SchoolInfo = { orgCode: string; baseURL: string };
 
@@ -18,7 +18,7 @@ class Runtime {
 
     const {
       schulList: [{ orgCode, atptOfcdcConctUrl }],
-    } = await this.ctx.get<API_TYPE.SEARCH_SCHOOL>(API_URL.SEARCH_SCHOOL, {
+    } = await this.ctx.get<API_TYPE.SEARCH_SCHOOL>(SEARCH_SCHOOL, {
       params: {
         schulCrseScCode: getSchoolLevelCode(inferSchoolLevel(school)),
         lctnScCode: getAreaCode(normalizeArea(area)),
@@ -41,7 +41,7 @@ class Runtime {
       stdntPNo: null,
     };
     const { token } = await this.ctx.post<API_TYPE.FIND_USER>(
-      API_URL.FIND_USER,
+      FIND_USER,
       request,
       {
         baseURL,
@@ -73,7 +73,7 @@ class Runtime {
       upperUserNameEncpt: this.user.name,
     };
     return await this.ctx.post<API_TYPE.SEND_SURVEY_RESULT>(
-      API_URL.SEND_SURVEY_RESULT,
+      SEND_SURVEY_RESULT,
       request,
       { baseURL: this.schoolInfo.baseURL, token: this.token }
     );
