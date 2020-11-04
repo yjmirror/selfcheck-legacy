@@ -2,8 +2,10 @@ import axios from 'axios';
 import { RUNTIME_PATH } from './constants';
 import store, { Runtime } from './configStore';
 
-declare var __RUNTIME_VERSION__: number;
-export const defaultRuntimeVersion = __RUNTIME_VERSION__;
+declare var __BUNDLED_RUNTIME__: string;
+const bundledRuntime: RuntimePayload = JSON.parse(__BUNDLED_RUNTIME__);
+setRuntime(bundledRuntime);
+export const bundledRuntimeVersion = bundledRuntime.version;
 export interface RuntimePayload {
   code: string;
   version: number;
@@ -24,6 +26,10 @@ export function setRuntime({ code, version, options }: RuntimePayload) {
     version,
   };
   store.runtime = runtime;
+}
+
+export function getRuntimeVersion() {
+  return store.runtime.version;
 }
 
 /**

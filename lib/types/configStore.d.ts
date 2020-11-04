@@ -1,6 +1,6 @@
 interface ConfigStore {
     manualUpdate: boolean;
-    runtime?: Runtime;
+    runtime: Runtime;
     publicKey: string;
     headers: Record<string, string>;
 }

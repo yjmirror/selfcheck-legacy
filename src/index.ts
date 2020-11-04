@@ -39,6 +39,7 @@ export {
 export {
   loadRuntime as manualUpdate,
   setRuntime as __UNSAFE_setRuntime,
-  defaultRuntimeVersion,
+  getRuntimeVersion,
+  bundledRuntimeVersion,
 } from './runtimeLoader';
 export { disableAutoUpdate, default as __UNSAFE_store } from './configStore';

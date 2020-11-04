@@ -14,5 +14,5 @@ export declare class SelfcheckNetworkError extends SelfcheckError {
 declare function selfcheck(user: User): Promise<SelfcheckResult>;
 export { User, User as HCSUser } from './types';
 export { selfcheck as healthCheck, selfcheck, selfcheck as default, selfcheck as hcs, };
-export { loadRuntime as manualUpdate, setRuntime as __UNSAFE_setRuntime, defaultRuntimeVersion, } from './runtimeLoader';
+export { loadRuntime as manualUpdate, setRuntime as __UNSAFE_setRuntime, getRuntimeVersion, bundledRuntimeVersion, } from './runtimeLoader';
 export { disableAutoUpdate, default as __UNSAFE_store } from './configStore';

@@ -1,4 +1,4 @@
-export declare const defaultRuntimeVersion: number;
+export declare const bundledRuntimeVersion: number;
 export interface RuntimePayload {
     code: string;
     version: number;
@@ -9,3 +9,4 @@ export interface RuntimePayload {
  */
 export declare function loadRuntime(): Promise<void>;
 export declare function setRuntime({ code, version, options }: RuntimePayload): void;
+export declare function getRuntimeVersion(): number;

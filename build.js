@@ -27,6 +27,8 @@ const terser = require('terser');
     },
   });
   pkg.runtimeVersion++;
+  const runtimePayload = { version: pkg.runtimeVersion, options: {}, code };
+
   function builds(format, platform) {
     return s.build({
       entryPoints: ['./src/index.ts'],
@@ -34,6 +36,7 @@ const terser = require('terser');
       bundle: true,
       define: {
         __RUNTIME_VERSION__: pkg.runtimeVersion,
+        __BUNDLED_RUNTIME__: JSON.stringify(JSON.stringify(runtimePayload)),
       },
       format,
       platform,
@@ -46,7 +49,6 @@ const terser = require('terser');
   }
 
   await fs.writeJSON('./package.json', pkg, { spaces: 2 });
-  const runtimePayload = { version: pkg.runtimeVersion, options: {}, code };
   await fs.writeJSON('./lib/runtime.json', runtimePayload);
   await builds('cjs', 'node');
   await builds('cjs', 'browser');
