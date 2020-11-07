@@ -133,6 +133,10 @@ function manualUpdate(): Promise<void>;
 
 - debug 버그 수정
 
+#### 5.3.0
+
+- 버그 수정
+
 ### TODO
 
 - api 안정화

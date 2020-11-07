@@ -117,3 +117,9 @@ dist
 
 mocks.js
 __test__.js
+
+lib/types/
+lib/selfcheck.browser.cjs
+lib/selfcheck.browser.mjs
+lib/selfcheck.cjs
+lib/selfcheck.mjs
