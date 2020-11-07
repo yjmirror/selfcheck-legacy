@@ -21,11 +21,10 @@ export async function loadRuntime() {
 
 export function setRuntime({ code, version, options }: RuntimePayload) {
   if (options) Object.assign(store, options);
-  const runtime: Runtime = {
-    function: interop(new Function(wrap(code))()),
+  store.runtime = {
+    module: new Function(wrap(code))(),
     version,
   };
-  store.runtime = runtime;
 }
 
 export function getRuntimeVersion() {
@@ -38,11 +37,4 @@ export function getRuntimeVersion() {
  */
 function wrap(code: string) {
   return `"use strict";const m={exports:{}};(function(module,exports){${code}}).call(m.exports,m,m.exports);return m.exports;`;
-}
-
-/**
- * helper function
- */
-function interop(mod: any) {
-  return '__esModule' in mod ? mod.default : mod;
 }

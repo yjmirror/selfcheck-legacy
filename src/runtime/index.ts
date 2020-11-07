@@ -139,3 +139,15 @@ export default async (user: User, ctx: ContextType) => {
     throw e;
   }
 };
+
+export async function validate(user: User, ctx: ContextType) {
+  const rt = new Runtime(user, ctx);
+  try {
+    await rt.$$searchSchool$$();
+    await rt.$$getToken$$();
+    if (rt.$$token$$) return true;
+  } catch (e) {
+    return false;
+  }
+  return false;
+}

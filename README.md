@@ -65,6 +65,12 @@ type SelfcheckResult = {
 function selfcheck(user: User): Promise<SelfcheckResult>;
 
 /**
+ * 사용자 정보를 검증
+ * @param user 자가진단을 수행할 사용자 정보
+ */
+function validate(user: User): Promise<boolean>;
+
+/**
  * 런타임 버전을 확인
  */
 function getRuntimeVersion(): number;
@@ -136,6 +142,10 @@ function manualUpdate(): Promise<void>;
 #### 5.3.0
 
 - 버그 수정
+
+#### 5.4.0
+
+- 사용자 검증기능 추가 (dry run)
 
 ### TODO
 

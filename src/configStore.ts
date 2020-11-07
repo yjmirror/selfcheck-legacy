@@ -6,7 +6,7 @@ interface ConfigStore {
 }
 export interface Runtime {
   version: number;
-  function: Function;
+  module: typeof import('./runtime');
 }
 
 const config: ConfigStore = {

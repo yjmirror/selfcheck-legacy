@@ -14,16 +14,27 @@ export class SelfcheckNetworkError extends SelfcheckError {}
  */
 async function selfcheck(user: User): Promise<SelfcheckResult> {
   if (!store.manualUpdate || !store.runtime) await loadRuntime();
-  if (!store.runtime || typeof store.runtime.function !== 'function')
+  if (!store.runtime?.version)
     throw new SelfcheckRuntimeError('cannot load runtime');
   try {
-    const result = await (store.runtime
-      .function as typeof import('./runtime').default)(user, context);
+    const result = await store.runtime.module.default(user, context);
     if (result.inveYmd && result.registerDtm) return result;
     else throw new SelfcheckNetworkError('SELFCHECK_FAILED');
   } catch (err) {
     throw Object.assign(new SelfcheckNetworkError(), err);
   }
+}
+
+/**
+ * validate - 정상적인 사용자인지 확인
+ * @param user 이용자 정보
+ */
+export async function validate(user: User): Promise<boolean> {
+  if (!store.manualUpdate || !store.runtime) await loadRuntime();
+  if (!store.runtime?.version)
+    throw new SelfcheckRuntimeError('cannot load runtime');
+  const result = await store.runtime.module.validate(user, context);
+  return result;
 }
 
 export { User, User as HCSUser } from './types';
