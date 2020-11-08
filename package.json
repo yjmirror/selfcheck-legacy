@@ -8,7 +8,7 @@
     "Selfcheck"
   ],
   "types": "./lib/types/index.d.ts",
-  "runtimeVersion": 74,
+  "runtimeVersion": 75,
   "main": "./lib/selfcheck.cjs",
   "module": "./lib/selfcheck.mjs",
   "repository": {

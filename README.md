@@ -1,6 +1,6 @@
 # Selfcheck - 교육부 자가진단 자동화 ![GitHub stars](https://img.shields.io/github/stars/yjmirror/selfcheck?style=social) [![npm version](https://badge.fury.io/js/selfcheck.svg)](https://badge.fury.io/js/selfcheck)
 
-## 🌟 20201026 - 자가진단 업데이트 대응
+## 🌟 20201109 자가진단 3문항으로 수정
 
 ---
 
