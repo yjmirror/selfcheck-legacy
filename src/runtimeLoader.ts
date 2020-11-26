@@ -1,40 +1,37 @@
 import axios from 'axios';
-import { RUNTIME_PATH } from './constants';
-import store, { Runtime } from './configStore';
+import { RUNTIME_URL } from './constants';
+import store from './configStore';
+import { hostApi } from './hostApi';
 
 declare var __BUNDLED_RUNTIME__: string;
-const bundledRuntime: RuntimePayload = JSON.parse(__BUNDLED_RUNTIME__);
-setRuntime(bundledRuntime);
-export const bundledRuntimeVersion = bundledRuntime.version;
+
+const __bundledRuntime: RuntimePayload = JSON.parse(__BUNDLED_RUNTIME__);
+__setRuntime(__bundledRuntime);
+
 export interface RuntimePayload {
   code: string;
   version: number;
   options: any;
 }
-/**
- * 런타임을 업데이트
- */
-export async function loadRuntime() {
-  let { data: payload } = await axios.get<RuntimePayload>(RUNTIME_PATH);
-  setRuntime(payload);
+
+export async function loadRuntimeFromNetwork() {
+  let { data: payload } = await axios.get<RuntimePayload>(RUNTIME_URL);
+  __setRuntime(payload);
 }
 
-export function setRuntime({ code, version, options }: RuntimePayload) {
+export function __setRuntime({ code, version, options }: RuntimePayload) {
   if (options) Object.assign(store, options);
   store.runtime = {
-    module: new Function(wrap(code))(),
+    module: instanciate(code),
     version,
   };
 }
 
-export function getRuntimeVersion() {
-  return store.runtime.version;
+export function __getRuntimeVersion() {
+  return { current: store.runtime.version, bundled: __bundledRuntime.version };
 }
 
-/**
- * commonjs function wrapper
- * @param code commonjs code
- */
-function wrap(code: string) {
-  return `"use strict";const m={exports:{}};(function(module,exports){${code}}).call(m.exports,m,m.exports);return m.exports;`;
+function instanciate(commonjs: string) {
+  const code = `'use strict';const m={exports:{}};(function(module,exports,__HOST_API){${commonjs}}).call(m.exports,m,m.exports,__HOST_API);return m.exports;`;
+  return new Function('__HOST_API', code)(hostApi);
 }

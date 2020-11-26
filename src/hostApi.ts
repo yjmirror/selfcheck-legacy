@@ -1,9 +1,10 @@
 import { encrypt } from './encrypt';
 import { apiGetRequest, apiPostRequest } from './request';
 
-export const context = {
+export const hostApi = {
   get: apiGetRequest,
   post: apiPostRequest,
   encrypt: encrypt,
 };
-export type ContextType = typeof context;
+
+export type HOST_API_TYPE = typeof hostApi;

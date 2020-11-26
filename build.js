@@ -2,6 +2,7 @@ const esbuild = require('esbuild');
 const fs = require('fs-extra');
 const terser = require('terser');
 
+process.on('unhandledRejection', process.exit);
 (async () => {
   const pkg = await fs.readJSON('./package.json');
   const s = await esbuild.startService();
@@ -22,38 +23,39 @@ const terser = require('terser');
     toplevel: true,
     mangle: {
       properties: {
-        regex: /^\$\$.*\$\$$/,
+        regex: /\$_\$$/,
       },
     },
   });
   pkg.runtimeVersion++;
-  const runtimePayload = { version: pkg.runtimeVersion, options: {}, code };
+  console.log(`building version`, pkg.runtimeVersion);
+  const runtimePayload = {
+    version: pkg.runtimeVersion,
+    options: pkg.runtimePayload || {},
+    code,
+  };
 
-  function builds(format, platform) {
+  function builds(format) {
     return s.build({
       entryPoints: ['./src/index.ts'],
-      minify: true,
-      bundle: true,
       define: {
-        __IS_NODE__: platform === 'node',
         __RUNTIME_VERSION__: pkg.runtimeVersion,
         __BUNDLED_RUNTIME__: JSON.stringify(JSON.stringify(runtimePayload)),
       },
       format,
-      platform,
+      external: ['axios', 'node-rsa'],
+      platform: 'node',
       write: true,
+      bundle: true,
       charset: 'utf8',
-      outfile: `./lib/selfcheck${platform === 'browser' ? '.browser' : ''}.${
-        format === 'cjs' ? 'cjs' : 'mjs'
-      }`,
+      outfile: `./lib/selfcheck.${format === 'cjs' ? 'cjs' : 'mjs'}`,
     });
   }
 
   await fs.writeJSON('./package.json', pkg, { spaces: 2 });
-  await fs.writeJSON('./lib/runtime.json', runtimePayload);
-  await builds('cjs', 'node');
-  await builds('cjs', 'browser');
-  await builds('esm', 'node');
-  await builds('esm', 'browser');
+  await fs.writeJSON('./lib/runtime_next.json', runtimePayload);
+
+  await builds('cjs');
+  await builds('esm');
   s.stop();
 })();

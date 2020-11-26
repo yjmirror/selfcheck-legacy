@@ -1,25 +1,21 @@
-import { Area, User } from '../types';
-import { ContextType } from '../context';
+import { User } from '../types';
+import { HOST_API_TYPE } from '../hostApi';
 import { API_TYPE, SEARCH_SCHOOL, SEND_SURVEY_RESULT, FIND_USER } from './api';
-import { normalizeArea } from '../area';
+import { getAreaCode, normalizeArea } from './area';
 
-type SchoolInfo = { $$orgCode$$: string; $$baseURL$$: string };
+type SchoolInfo = { orgCode$_$: string; baseURL$_$: string };
 
-class Runtime {
-  $$ctx$$: ContextType;
-  $$user$$: User;
-  $$token$$!: string;
-  $$schoolInfo$$!: SchoolInfo;
-  constructor(user: User, ctx: ContextType) {
-    this.$$ctx$$ = ctx;
-    this.$$user$$ = user;
-  }
-  async $$searchSchool$$() {
-    const { school, area } = this.$$user$$;
+declare const __HOST_API: HOST_API_TYPE;
 
+function initialize(user: User) {
+  const { school, area, name, birthday } = user;
+  let schoolInfo: SchoolInfo;
+  let token: string;
+
+  async function searchSchool$_$() {
     const {
       schulList: [{ orgCode, atptOfcdcConctUrl }],
-    } = await this.$$ctx$$.get<API_TYPE.SEARCH_SCHOOL>(SEARCH_SCHOOL, {
+    } = await __HOST_API.get<API_TYPE.SEARCH_SCHOOL>(SEARCH_SCHOOL, {
       params: {
         schulCrseScCode: inferSchoolLevel(school),
         lctnScCode: getAreaCode(normalizeArea(area)),
@@ -28,33 +24,29 @@ class Runtime {
       },
       baseURL: 'hcs.eduro.go.kr',
     });
-    this.$$schoolInfo$$ = {
-      $$orgCode$$: orgCode,
-      $$baseURL$$: atptOfcdcConctUrl,
+    schoolInfo = {
+      orgCode$_$: orgCode,
+      baseURL$_$: atptOfcdcConctUrl,
     };
   }
 
-  async $$getToken$$() {
-    const { name, birthday } = this.$$user$$;
-    const { $$orgCode$$: orgCode, $$baseURL$$: baseURL } = this.$$schoolInfo$$;
+  async function getToken$_$() {
+    const { orgCode$_$: orgCode, baseURL$_$: baseURL } = schoolInfo;
     const request = {
-      name: this.$$ctx$$.encrypt(name),
-      birthday: this.$$ctx$$.encrypt(birthday),
+      name: __HOST_API.encrypt(name),
+      birthday: __HOST_API.encrypt(birthday),
       orgCode,
       loginType: 'school',
       stdntPNo: null,
     };
-    const { token } = await this.$$ctx$$.post<API_TYPE.FIND_USER>(
-      FIND_USER,
-      request,
-      {
-        baseURL,
-      }
-    );
-
-    this.$$token$$ = token;
+    const resp = await __HOST_API.post<API_TYPE.FIND_USER>(FIND_USER, request, {
+      baseURL,
+    });
+    token = resp.token;
+    return token;
   }
-  async $$sendRequest$$() {
+
+  async function sendRequest$_$() {
     const request = {
       deviceUuid: '',
       rspns00: 'Y',
@@ -73,15 +65,22 @@ class Runtime {
       rspns13: null,
       rspns14: null,
       rspns15: null,
-      upperToken: this.$$token$$,
-      upperUserNameEncpt: this.$$user$$.name,
+      upperToken: token,
+      upperUserNameEncpt: name,
     };
-    return await this.$$ctx$$.post<API_TYPE.SEND_SURVEY_RESULT>(
+
+    return await __HOST_API.post<API_TYPE.SEND_SURVEY_RESULT>(
       SEND_SURVEY_RESULT,
       request,
-      { baseURL: this.$$schoolInfo$$.$$baseURL$$, token: this.$$token$$ }
+      { baseURL: schoolInfo.baseURL$_$, token }
     );
   }
+
+  return {
+    searchSchool$_$,
+    sendRequest$_$,
+    getToken$_$,
+  };
 }
 
 function inferSchoolLevel(name: string) {
@@ -106,48 +105,26 @@ function inferSchoolLevel(name: string) {
   }
 }
 
-function getAreaCode(a: Area) {
-  return {
-    서울: '01',
-    부산: '02',
-    대구: '03',
-    인천: '04',
-    광주: '05',
-    대전: '06',
-    울산: '07',
-    세종: '08',
-    경기: '10',
-    강원: '11',
-    충북: '12',
-    충남: '13',
-    전북: '14',
-    전남: '15',
-    경북: '16',
-    경남: '17',
-    제주: '18',
-  }[a];
-}
-
-export default async (user: User, ctx: ContextType) => {
-  const rt = new Runtime(user, ctx);
+export default async (user: User) => {
+  const { searchSchool$_$, sendRequest$_$, getToken$_$ } = initialize(user);
   try {
-    await rt.$$searchSchool$$();
-    await rt.$$getToken$$();
-    return rt.$$sendRequest$$();
+    await searchSchool$_$();
+    await getToken$_$();
+    return sendRequest$_$();
   } catch (e) {
     console.error(e);
     throw e;
   }
 };
 
-export async function validate(user: User, ctx: ContextType) {
-  const rt = new Runtime(user, ctx);
+export async function validate(user: User) {
+  const { searchSchool$_$, getToken$_$ } = initialize(user);
   try {
-    await rt.$$searchSchool$$();
-    await rt.$$getToken$$();
-    if (rt.$$token$$) return true;
-  } catch (e) {
+    await searchSchool$_$();
+    const token = await getToken$_$();
+    if (token.length > 1) return true;
+    else return false;
+  } catch {
     return false;
   }
-  return false;
 }

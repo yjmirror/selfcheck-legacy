@@ -69,22 +69,6 @@ function selfcheck(user: User): Promise<SelfcheckResult>;
  * @param user 자가진단을 수행할 사용자 정보
  */
 function validate(user: User): Promise<boolean>;
-
-/**
- * 런타임 버전을 확인
- */
-function getRuntimeVersion(): number;
-
-/**
- * 자동 업데이트 비활성화
- */
-function disableUpdate(): void;
-
-/**
- * ! disableUpdate()를 통해 자동 업데이트가 꺼져 있을 때에만 사용하시오
- * 런타임 수동 업데이트
- */
-function manualUpdate(): Promise<void>;
 ```
 
 ### 🔨 CHANGELOG
@@ -121,7 +105,7 @@ function manualUpdate(): Promise<void>;
 
 #### 5.0.0
 
-- Runtime 업데이트 도입, npm 업데이트 필요 없이 자동으로 업데이트
+- live patch 도입, npm 업데이트 필요 없이 자동으로 업데이트
 
 #### 5.0.2
 
@@ -145,8 +129,11 @@ function manualUpdate(): Promise<void>;
 
 #### 5.4.0
 
-- 사용자 검증기능 추가 (dry run)
+- 사용자 검증기능 추가 (validate)
 
-### TODO
+#### 6.0.0
 
-- api 안정화
+- Dropped support for 5.x
+- New live patch method
+- A lot of otimization
+- Internal api renamed

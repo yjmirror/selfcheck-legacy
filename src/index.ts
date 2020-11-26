@@ -1,39 +1,33 @@
-import { loadRuntime } from './runtimeLoader';
+import { loadRuntimeFromNetwork } from './runtimeLoader';
 import { User } from './types';
-import store from './configStore';
-import { context } from './context';
+import store, { configureAutoUpdate } from './configStore';
 import { API_TYPE } from './runtime/api';
 
 export type SelfcheckResult = API_TYPE.SEND_SURVEY_RESULT;
 export class SelfcheckError extends Error {}
-export class SelfcheckRuntimeError extends SelfcheckError {}
-export class SelfcheckNetworkError extends SelfcheckError {}
+
 /**
- * Selfcheck - 교육부 자가진단 자동화
+ * 교육부 자가진단 자동화
  * @param user 이용자 정보
  */
 async function selfcheck(user: User): Promise<SelfcheckResult> {
-  if (!store.manualUpdate || !store.runtime) await loadRuntime();
-  if (!store.runtime?.version)
-    throw new SelfcheckRuntimeError('cannot load runtime');
+  if (store.useAutoUpdate) await loadRuntimeFromNetwork();
   try {
-    const result = await store.runtime.module.default(user, context);
+    const result = await store.runtime.module.default(user);
     if (result.inveYmd && result.registerDtm) return result;
-    else throw new SelfcheckNetworkError('SELFCHECK_FAILED');
+    else throw new SelfcheckError('SELFCHECK_FAILED');
   } catch (err) {
-    throw Object.assign(new SelfcheckNetworkError(), err);
+    throw Object.assign(new SelfcheckError(), err);
   }
 }
 
 /**
- * validate - 정상적인 사용자인지 확인
+ * 정상적인 사용자인지 확인
  * @param user 이용자 정보
  */
 export async function validate(user: User): Promise<boolean> {
-  if (!store.manualUpdate || !store.runtime) await loadRuntime();
-  if (!store.runtime?.version)
-    throw new SelfcheckRuntimeError('cannot load runtime');
-  const result = await store.runtime.module.validate(user, context);
+  if (store.useAutoUpdate) await loadRuntimeFromNetwork();
+  const result = await store.runtime.module.validate(user);
   return result;
 }
 
@@ -47,9 +41,21 @@ export {
 };
 
 export {
-  loadRuntime as manualUpdate,
-  setRuntime as __UNSAFE_setRuntime,
-  getRuntimeVersion,
-  bundledRuntimeVersion,
+  __setRuntime as __v3Ry_uNsTab1E_setRuntime,
+  __getRuntimeVersion as __getRuntimeVersion,
 } from './runtimeLoader';
-export { disableAutoUpdate, default as __UNSAFE_store } from './configStore';
+
+export async function useManualUpdate() {
+  await loadRuntimeFromNetwork();
+  configureAutoUpdate(false);
+  return loadRuntimeFromNetwork;
+}
+
+export function __enableTestMode() {
+  configureAutoUpdate(false);
+}
+
+export {
+  default as __store,
+  configureAutoUpdate as __configureAutoUpdate,
+} from './configStore';
