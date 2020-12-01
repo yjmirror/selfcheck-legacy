@@ -3,44 +3,39 @@ const fs = require('fs-extra');
 const terser = require('terser');
 
 process.on('unhandledRejection', process.exit);
+
+const runtimeFileName = `runtime_v7.js`;
+
 (async () => {
   const pkg = await fs.readJSON('./package.json');
   const s = await esbuild.startService();
+  pkg.runtimeVersion++;
+  console.log(`building version`, pkg.runtimeVersion);
+
   const { outputFiles } = await s.build({
     entryPoints: ['./src/runtime/index.ts'],
     bundle: true,
+    define: {
+      __RUNTIME_VERSION__: pkg.runtimeVersion,
+    },
     format: 'cjs',
     charset: 'utf8',
     platform: 'node',
     write: false,
   });
-
   const [{ contents }] = outputFiles;
   const str = Buffer.from(contents.buffer).toString('utf8');
-  const { code } = await terser.minify(str, {
-    ecma: 10,
-    compress: { hoist_funs: true, keep_classnames: false, passes: 5 },
-    toplevel: true,
-    mangle: {
-      properties: {
-        regex: /\$_\$$/,
-      },
-    },
-  });
-  pkg.runtimeVersion++;
-  console.log(`building version`, pkg.runtimeVersion);
-  const runtimePayload = {
-    version: pkg.runtimeVersion,
-    options: pkg.runtimePayload || {},
-    code,
-  };
+  const code = await terserMinifyRuntime(await terserMinifyRuntime(str));
 
-  function builds(format) {
+  function buildMain(format) {
     return s.build({
       entryPoints: ['./src/index.ts'],
       define: {
         __RUNTIME_VERSION__: pkg.runtimeVersion,
-        __BUNDLED_RUNTIME__: JSON.stringify(JSON.stringify(runtimePayload)),
+        __RUNTIME_DOWNLOAD_URL__: JSON.stringify(
+          `https://raw.githubusercontent.com/yjmirror/selfcheck/master/lib/${runtimeFileName}`
+        ),
+        __BUNDLED_RUNTIME__: JSON.stringify(code),
       },
       format,
       external: ['axios', 'node-rsa'],
@@ -48,14 +43,31 @@ process.on('unhandledRejection', process.exit);
       write: true,
       bundle: true,
       charset: 'utf8',
-      outfile: `./lib/selfcheck.${format === 'cjs' ? 'cjs' : 'mjs'}`,
+      outfile: `./lib/selfcheck.${format === 'cjs' ? 'js' : 'mjs'}`,
     });
   }
 
   await fs.writeJSON('./package.json', pkg, { spaces: 2 });
-  await fs.writeJSON('./lib/runtime_next.json', runtimePayload);
+  await fs.writeFile(`./lib/${runtimeFileName}`, code);
 
-  await builds('cjs');
-  await builds('esm');
+  await buildMain('cjs');
+  await buildMain('esm');
   s.stop();
 })();
+
+async function terserMinifyRuntime(str) {
+  const { code } = await terser.minify(str, {
+    ecma: 11,
+    compress: { hoist_funs: true, keep_classnames: false, passes: 10 },
+    toplevel: true,
+    format: {
+      quote_style: /* AlwaysSingle */ 1,
+    },
+    mangle: {
+      properties: {
+        regex: /\$_\$$/,
+      },
+    },
+  });
+  return code;
+}

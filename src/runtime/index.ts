@@ -1,48 +1,79 @@
-import { User } from '../types';
-import { HOST_API_TYPE } from '../hostApi';
+import type { User } from '..';
+import { HOST_API_TYPE } from '../runtimeHost';
 import { API_TYPE, SEARCH_SCHOOL, SEND_SURVEY_RESULT, FIND_USER } from './api';
-import { getAreaCode, normalizeArea } from './area';
-
-type SchoolInfo = { orgCode$_$: string; baseURL$_$: string };
+import {
+  getAreaCode,
+  normalizeArea,
+  inferSchoolLevel,
+  normalizeUrl,
+} from './util';
 
 declare const __HOST_API: HOST_API_TYPE;
+declare const __RUNTIME_VERSION__: string;
+export const version = __RUNTIME_VERSION__;
+
+const { crypto, axios, Buffer, SelfcheckError } = __HOST_API;
 
 function initialize(user: User) {
+  const instance = axios.create({
+    headers: {
+      post: {
+        'Sec-Fetch-Site': 'same-site',
+      },
+      common: {
+        Accept: 'application/json, text/plain, */*',
+        'Accept-Encoding': `gzip, deflate, br`,
+        'Accept-Language': `ko-KR,ko;q=0.9`,
+        'Cache-Control': `no-cache`,
+        Connection: `keep-alive`,
+        Pragma: `no-cache`,
+        Referer: `https"://hcs.eduro.go.kr/`,
+        'sec-ch-ua': `"Google Chrome";v="87", "\"Not;A\\Brand";v="99", "Chromium";v="87"`,
+        'sec-ch-ua-mobile': `?0`,
+        'Sec-Fetch-Dest': `empty`,
+        'Sec-Fetch-Mode': `cors`,
+        'Sec-Fetch-Site': `same-origin`,
+        'User-Agent': `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36`,
+        'X-Requested-With': `XMLHttpRequest`,
+      },
+    },
+  });
   const { school, area, name, birthday } = user;
-  let schoolInfo: SchoolInfo;
+  let orgCode: string;
   let token: string;
 
   async function searchSchool$_$() {
-    const {
-      schulList: [{ orgCode, atptOfcdcConctUrl }],
-    } = await __HOST_API.get<API_TYPE.SEARCH_SCHOOL>(SEARCH_SCHOOL, {
+    const { data } = await instance.get<API_TYPE.SEARCH_SCHOOL>(SEARCH_SCHOOL, {
       params: {
         schulCrseScCode: inferSchoolLevel(school),
         lctnScCode: getAreaCode(normalizeArea(area)),
         orgName: school,
-        currentPageNo: 1,
+        loginType: 'school',
       },
-      baseURL: 'hcs.eduro.go.kr',
+      baseURL: 'https://hcs.eduro.go.kr',
     });
-    schoolInfo = {
-      orgCode$_$: orgCode,
-      baseURL$_$: atptOfcdcConctUrl,
-    };
+    if (!data || !data.schulList || !data.schulList.length) {
+      throw new SelfcheckError('cannot find school');
+    }
+    const schoolItem = data.schulList[0];
+    instance.defaults.baseURL = normalizeUrl(schoolItem.atptOfcdcConctUrl);
+    orgCode = schoolItem.orgCode;
+    return orgCode;
   }
 
-  async function getToken$_$() {
-    const { orgCode$_$: orgCode, baseURL$_$: baseURL } = schoolInfo;
+  async function findUser$_$() {
     const request = {
-      name: __HOST_API.encrypt(name),
-      birthday: __HOST_API.encrypt(birthday),
+      name: encrypt(name),
+      birthday: encrypt(birthday),
       orgCode,
       loginType: 'school',
-      stdntPNo: null,
     };
-    const resp = await __HOST_API.post<API_TYPE.FIND_USER>(FIND_USER, request, {
-      baseURL,
-    });
-    token = resp.token;
+    const r = await instance.post<API_TYPE.FIND_USER>(FIND_USER, request);
+    if (!r.data || !r.data.token)
+      throw new SelfcheckError('cannot find school');
+    token = r.data.token;
+
+    instance.defaults.headers.common['Authorization'] = token;
     return token;
   }
 
@@ -69,48 +100,27 @@ function initialize(user: User) {
       upperUserNameEncpt: name,
     };
 
-    return await __HOST_API.post<API_TYPE.SEND_SURVEY_RESULT>(
+    const { data } = await instance.post<API_TYPE.SEND_SURVEY_RESULT>(
       SEND_SURVEY_RESULT,
-      request,
-      { baseURL: schoolInfo.baseURL$_$, token }
+      request
     );
+    if (data && data.registerDtm) return data;
+    else throw new SelfcheckError('abnormal response from server');
   }
 
   return {
     searchSchool$_$,
     sendRequest$_$,
-    getToken$_$,
+    findUser$_$,
   };
 }
 
-function inferSchoolLevel(name: string) {
-  const SCHOOL_LEVEL_유치원 = '1';
-  const SCHOOL_LEVEL_초등학교 = '2';
-  const SCHOOL_LEVEL_중학교 = '3';
-  const SCHOOL_LEVEL_고등학교 = '4';
-  const SCHOOL_LEVEL_특수학교 = '5';
-  if (name.endsWith('학교')) {
-    if (name.endsWith('초등학교')) return SCHOOL_LEVEL_초등학교;
-    else if (name.endsWith('중학교')) return SCHOOL_LEVEL_중학교;
-    else if (name.endsWith('고등학교')) return SCHOOL_LEVEL_고등학교;
-    return SCHOOL_LEVEL_특수학교;
-  } else {
-    const lastChar = name[name.length - 1];
-    if (lastChar === '초') return SCHOOL_LEVEL_초등학교;
-    else if (lastChar === '중') return SCHOOL_LEVEL_중학교;
-    else if (lastChar === '고') return SCHOOL_LEVEL_고등학교;
-    else if (name.includes('유치') || lastChar === '집')
-      return SCHOOL_LEVEL_유치원;
-    else throw new Error('unexpected school name');
-  }
-}
-
 export default async (user: User) => {
-  const { searchSchool$_$, sendRequest$_$, getToken$_$ } = initialize(user);
+  const { searchSchool$_$, sendRequest$_$, findUser$_$ } = initialize(user);
   try {
     await searchSchool$_$();
-    await getToken$_$();
-    return sendRequest$_$();
+    await findUser$_$();
+    return await sendRequest$_$();
   } catch (e) {
     console.error(e);
     throw e;
@@ -118,13 +128,31 @@ export default async (user: User) => {
 };
 
 export async function validate(user: User) {
-  const { searchSchool$_$, getToken$_$ } = initialize(user);
+  const { searchSchool$_$, findUser$_$ } = initialize(user);
   try {
     await searchSchool$_$();
-    const token = await getToken$_$();
+    const token = await findUser$_$();
     if (token.length > 1) return true;
     else return false;
   } catch {
     return false;
   }
+}
+
+const publicKey = `-----BEGIN RSA PUBLIC KEY-----
+MIIBCgKCAQEA81dCnCKt0NVH7j5Oh2+SGgEU0aqi5u6sYXemouJWXOlZO3jqDsHY
+M1qfEjVvCOmeoMNFXYSXdNhflU7mjWP8jWUmkYIQ8o3FGqMzsMTNxr+bAp0cULWu
+9eYmycjJwWIxxB7vUwvpEUNicgW7v5nCwmF5HS33Hmn7yDzcfjfBs99K5xJEppHG
+0qc+q3YXxxPpwZNIRFn0Wtxt0Muh1U8avvWyw03uQ/wMBnzhwUC8T4G5NclLEWzO
+QExbQ4oDlZBv8BM/WxxuOyu0I8bDUDdutJOfREYRZBlazFHvRKNNQQD2qDfjRz48
+4uFs7b5nykjaMB9k/EJAuHjJzGs9MMMWtQIDAQAB
+-----END RSA PUBLIC KEY-----`;
+
+function encrypt(payload: string) {
+  return crypto
+    .publicEncrypt(
+      { key: publicKey, padding: crypto.constants.RSA_PKCS1_PADDING },
+      Buffer.from(payload)
+    )
+    .toString('base64');
 }

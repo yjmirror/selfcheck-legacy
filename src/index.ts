@@ -1,61 +1,72 @@
-import { loadRuntimeFromNetwork } from './runtimeLoader';
-import { User } from './types';
-import store, { configureAutoUpdate } from './configStore';
-import { API_TYPE } from './runtime/api';
+import { runtimeHost, updateRuntime } from './runtimeHost';
 
-export type SelfcheckResult = API_TYPE.SEND_SURVEY_RESULT;
-export class SelfcheckError extends Error {}
+interface SelfcheckResult {
+  registerDtm: string;
+  inveYmd: string;
+}
 
+interface User {
+  /**
+   * 실명
+   */
+  name: string;
+  /**
+   * 학교명
+   */
+  school: string;
+  /**
+   * 지역명
+   */
+  area: string;
+  /**
+   * 생일 (YYMMDD)
+   */
+  birthday: string;
+}
 /**
  * 교육부 자가진단 자동화
  * @param user 이용자 정보
  */
 async function selfcheck(user: User): Promise<SelfcheckResult> {
-  if (store.useAutoUpdate) await loadRuntimeFromNetwork();
-  try {
-    const result = await store.runtime.module.default(user);
-    if (result.inveYmd && result.registerDtm) return result;
-    else throw new SelfcheckError('SELFCHECK_FAILED');
-  } catch (err) {
-    throw Object.assign(new SelfcheckError(), err);
-  }
+  if (runtimeHost.useAutoUpdate) await updateRuntime();
+  return await runtimeHost.runtime.default(user);
 }
 
 /**
  * 정상적인 사용자인지 확인
  * @param user 이용자 정보
+ * @returns success 올바른 사용자인지 여부
  */
 export async function validate(user: User): Promise<boolean> {
-  if (store.useAutoUpdate) await loadRuntimeFromNetwork();
-  const result = await store.runtime.module.validate(user);
-  return result;
+  if (runtimeHost.useAutoUpdate) await updateRuntime();
+  return await runtimeHost.runtime.validate(user);
 }
 
-export { User, User as HCSUser } from './types';
-
 export {
-  selfcheck as healthCheck,
   selfcheck,
   selfcheck as default,
   selfcheck as hcs,
+  User,
+  User as HCSUser,
 };
 
 export {
-  __setRuntime as __v3Ry_uNsTab1E_setRuntime,
-  __getRuntimeVersion as __getRuntimeVersion,
-} from './runtimeLoader';
+  instanciate as __instanciate,
+  getRuntimeVersion as __getRuntimeVersion,
+} from './runtimeHost';
 
-export async function useManualUpdate() {
-  await loadRuntimeFromNetwork();
-  configureAutoUpdate(false);
-  return loadRuntimeFromNetwork;
+export function useManualUpdate() {
+  runtimeHost.useAutoUpdate = false;
+  return updateRuntime;
 }
 
 export function __enableTestMode() {
-  configureAutoUpdate(false);
+  runtimeHost.useAutoUpdate = false;
+  runtimeHost._internal['TEST'] = true;
 }
 
-export {
-  default as __store,
-  configureAutoUpdate as __configureAutoUpdate,
-} from './configStore';
+export function __pretendInApp() {
+  runtimeHost._internal['APP'] = true;
+}
+
+export { runtimeHost as __runtimeHost } from './runtimeHost';

@@ -20,7 +20,6 @@ const user = {
   school: '학교', // '학교'로 끝나는 string
   area: '서울특별시', // 서울, 서울시, 서울특별시 등 아무렇게나 입력 가능, string
   birthday: '010101', // YYMMDD 형식의 string
-  password: '1234', // 4자리 숫자, string
 };
 
 selfcheck(user)
@@ -137,3 +136,8 @@ function validate(user: User): Promise<boolean>;
 - New live patch method
 - A lot of otimization
 - Internal api renamed
+
+#### 7.0.0
+
+- 암호화 모듈 변경
+- 속도 개선
