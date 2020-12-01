@@ -1,6 +1,6 @@
 {
   "name": "selfcheck",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "description": "교육부 자가진단 자동화",
   "keywords": [
     "자가진단",
@@ -9,8 +9,8 @@
   ],
   "types": "./lib/types/index.d.ts",
   "runtimePayload": {},
-  "runtimeVersion": 93,
-  "main": "./lib/selfcheck.cjs",
+  "runtimeVersion": 108,
+  "main": "./lib/selfcheck.js",
   "module": "./lib/selfcheck.mjs",
   "repository": {
     "type": "git",
@@ -18,9 +18,7 @@
   },
   "browser": {
     "./lib/selfcheck.cjs": "./lib/selfcheck.browser.cjs",
-    "./lib/selfcheck.mjs": "./lib/selfcheck.browser.mjs",
-    "./src/encrypt.ts": "./src/encrypt.browser.ts",
-    "./src/debug.ts": "./src/debug.browser.ts"
+    "./lib/selfcheck.mjs": "./lib/selfcheck.browser.mjs"
   },
   "license": "MIT",
   "files": [
@@ -29,23 +27,20 @@
     "README.md"
   ],
   "dependencies": {
-    "axios": "^0.20.0",
-    "node-rsa": "^1.1.1"
+    "axios": "^0.21.0"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.5",
-    "@types/fs-extra": "^9.0.2",
-    "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.10.0",
-    "@types/node-rsa": "^1.0.0",
     "esbuild": "^0.8.1",
     "fs-extra": "^9.0.1",
+    "node-rsa": "^1.1.1",
     "rimraf": "^3.0.2",
     "terser": "^5.3.8",
     "typescript": "^4.0.2"
   },
   "scripts": {
-    "build": "rimraf lib/types && tsc && node build.js",
+    "prebuild": "rimraf lib/types",
+    "build": "tsc && node build.js",
     "prepack": "yarn build"
   }
 }
