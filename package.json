@@ -8,17 +8,12 @@
     "Selfcheck"
   ],
   "types": "./lib/types/index.d.ts",
-  "runtimePayload": {},
   "runtimeVersion": 112,
   "main": "./lib/selfcheck.js",
   "module": "./lib/selfcheck.mjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/yjmirror/selfcheck"
-  },
-  "browser": {
-    "./lib/selfcheck.cjs": "./lib/selfcheck.browser.cjs",
-    "./lib/selfcheck.mjs": "./lib/selfcheck.browser.mjs"
   },
   "license": "MIT",
   "files": [

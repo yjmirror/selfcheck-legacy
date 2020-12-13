@@ -1,5 +1,6 @@
 export const SEARCH_SCHOOL = '/v2/searchSchool';
 export const FIND_USER = '/v2/findUser';
+export const VALIDATE_PASSWORD = '/v2/validatePassword';
 export const SEND_SURVEY_RESULT = '/registerServey';
 export namespace API_TYPE {
   export type FIND_USER = {

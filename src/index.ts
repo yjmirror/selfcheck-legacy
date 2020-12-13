@@ -22,6 +22,11 @@ interface User {
    * 생일 (YYMMDD)
    */
   birthday: string;
+
+  /**
+   * 비밀번호
+   */
+  password: string;
 }
 /**
  * 교육부 자가진단 자동화

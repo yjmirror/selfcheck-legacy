@@ -1,6 +1,12 @@
 import type { User } from '..';
 import { HOST_API_TYPE } from '../runtimeHost';
-import { API_TYPE, SEARCH_SCHOOL, SEND_SURVEY_RESULT, FIND_USER } from './api';
+import {
+  API_TYPE,
+  SEARCH_SCHOOL,
+  SEND_SURVEY_RESULT,
+  FIND_USER,
+  VALIDATE_PASSWORD,
+} from './api';
 import {
   getAreaCode,
   normalizeArea,
@@ -38,7 +44,7 @@ function initialize(user: User) {
       },
     },
   });
-  const { school, area, name, birthday } = user;
+  const { school, area, name, birthday, password } = user;
   let orgCode: string;
   let token: string;
 
@@ -71,7 +77,21 @@ function initialize(user: User) {
     const r = await instance.post<API_TYPE.FIND_USER>(FIND_USER, request);
     if (!r.data || !r.data.token)
       throw new SelfcheckError('cannot find school');
-    token = r.data.token;
+    const tempToken = r.data.token;
+
+    const pw = await instance.post<string>(
+      VALIDATE_PASSWORD,
+      {
+        deviceUuid: '',
+        password: encrypt(password),
+      },
+      {
+        headers: {
+          Authorization: tempToken,
+        },
+      }
+    );
+    token = pw.data;
 
     instance.defaults.headers.common['Authorization'] = token;
     return token;

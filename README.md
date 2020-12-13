@@ -1,8 +1,8 @@
 # Selfcheck - 교육부 자가진단 자동화 ![GitHub stars](https://img.shields.io/github/stars/yjmirror/selfcheck?style=social) [![npm version](https://badge.fury.io/js/selfcheck.svg)](https://badge.fury.io/js/selfcheck)
 
-## 🌟 20201109 자가진단 3문항으로 수정
+## 🌟 20201214 비밀번호 인증방식 변경
 
----
+- !! 자가진단 서버가 비밀번호 확인이 필수로 변경됨에 따라 4자리 비밀번호를 반드시 입력해야 합니다
 
 ### ⚡ 사용 전 유의 사항 !!
 
@@ -18,8 +18,9 @@ const { selfcheck } = require('selfcheck');
 const user = {
   name: '이름', // 실명, string
   school: '학교', // '학교'로 끝나는 string
-  area: '서울특별시', // 서울, 서울시, 서울특별시 등 아무렇게나 입력 가능, string
+  area: '지역',
   birthday: '010101', // YYMMDD 형식의 string
+  password: '1234',
 };
 
 selfcheck(user)
@@ -48,9 +49,9 @@ export interface User {
    */
   birthday: string;
   /**
-   * 자가진단 비밀번호 (선택)
+   * 자가진단 비밀번호 (필수!!!)
    */
-  password?: string;
+  password: string;
 }
 
 type SelfcheckResult = {
@@ -141,3 +142,7 @@ function validate(user: User): Promise<boolean>;
 
 - 암호화 모듈 변경
 - 속도 개선
+
+#### 7.0.1
+
+- 비밀번호 패치
