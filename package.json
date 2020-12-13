@@ -1,6 +1,6 @@
 {
   "name": "selfcheck",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "교육부 자가진단 자동화",
   "keywords": [
     "자가진단",
@@ -9,7 +9,7 @@
   ],
   "types": "./lib/types/index.d.ts",
   "runtimePayload": {},
-  "runtimeVersion": 108,
+  "runtimeVersion": 112,
   "main": "./lib/selfcheck.js",
   "module": "./lib/selfcheck.mjs",
   "repository": {
