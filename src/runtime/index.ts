@@ -70,7 +70,7 @@ function initialize(user: User) {
   async function findUser$_$() {
     const request = {
       name: encrypt(name),
-      birthday: encrypt(birthday),
+      birthday: encrypt(birthday.slice(-6)),
       orgCode,
       loginType: 'school',
     };
@@ -83,7 +83,7 @@ function initialize(user: User) {
       VALIDATE_PASSWORD,
       {
         deviceUuid: '',
-        password: encrypt(password),
+        password: encrypt(`${password}`),
       },
       {
         headers: {

@@ -1,5 +1,5 @@
 export function normalizeArea(area: string): Area {
-  for (const char of '남북'.split('')) {
+  for (const char of '남북') {
     if (area.includes(char)) return toArea(area[0] + char);
   }
   return toArea(area.slice(0, 2));
