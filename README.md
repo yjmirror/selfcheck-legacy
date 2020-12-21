@@ -1,11 +1,12 @@
 # Selfcheck - 교육부 자가진단 자동화 ![GitHub stars](https://img.shields.io/github/stars/yjmirror/selfcheck?style=social) [![npm version](https://badge.fury.io/js/selfcheck.svg)](https://badge.fury.io/js/selfcheck)
 
+## 최소 지원 버전: v7.0.0
+
 <!--BEGIN_STATUS-->
 
 ## 2020년12월22일 테스트 결과: ✅ SUCCESS<br/>
 
 #### 런타임 버전: v118
-
 
 <!--END_STATUS-->
 
@@ -155,3 +156,7 @@ function validate(user: User): Promise<boolean>;
 #### 7.0.1
 
 - 비밀번호 패치
+
+#### 7.1.0
+
+- 빌드 스크립트 최적화
