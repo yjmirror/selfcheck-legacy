@@ -6,6 +6,9 @@ export type Runtime = typeof import('./runtime');
 export class SelfcheckError extends Error {}
 SelfcheckError.prototype.name = 'SelfcheckError';
 
+/**
+ * gyu
+ */
 export const runtimeHost: RuntimeHost = {
   url: __RUNTIME_DOWNLOAD_URL__,
   useAutoUpdate: true,
@@ -21,12 +24,12 @@ const hostApi = {
   __: runtimeHost,
 };
 
-export const bundledRuntime = instanciate(__BUNDLED_RUNTIME__);
+export const bundledRuntime = instantiate(__BUNDLED_RUNTIME__);
 runtimeHost.runtime = bundledRuntime;
 
 export async function updateRuntime() {
   const { data } = await axios.get<string>(runtimeHost.url);
-  runtimeHost.runtime = instanciate(data);
+  runtimeHost.runtime = instantiate(data);
 }
 
 export function getRuntimeVersion() {
@@ -36,7 +39,7 @@ export function getRuntimeVersion() {
   };
 }
 
-export function instanciate(commonjs: string): Runtime {
+export function instantiate(commonjs: string): Runtime {
   const code = `'use strict';const m={exports:{}};(function(module,exports,__HOST_API){${commonjs}}).call(m.exports,m,m.exports,__HOST_API);return m.exports;`;
   return new Function('__HOST_API', code)(hostApi);
 }

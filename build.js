@@ -23,9 +23,13 @@ const runtimeFileName = `runtime_v7.js`;
     platform: 'node',
     write: false,
   });
+
   const [{ contents }] = outputFiles;
   const str = Buffer.from(contents.buffer).toString('utf8');
   const code = await terserMinifyRuntime(await terserMinifyRuntime(str));
+  const runtimeCode = `/** @preserve Selfcheck Runtime v${pkg.runtimeVersion}
+ * NEVER RUN IT DIRECTLY!!!
+ */\n${code}`;
 
   function buildMain(format) {
     return s.build({
@@ -48,7 +52,7 @@ const runtimeFileName = `runtime_v7.js`;
   }
 
   await fs.writeJSON('./package.json', pkg, { spaces: 2 });
-  await fs.writeFile(`./lib/${runtimeFileName}`, code);
+  await fs.writeFile(`./lib/${runtimeFileName}`, runtimeCode);
 
   await buildMain('cjs');
   await buildMain('esm');
@@ -57,7 +61,7 @@ const runtimeFileName = `runtime_v7.js`;
 
 async function terserMinifyRuntime(str) {
   const { code } = await terser.minify(str, {
-    ecma: 11,
+    ecma: 12,
     compress: { hoist_funs: true, keep_classnames: false, passes: 10 },
     toplevel: true,
     format: {

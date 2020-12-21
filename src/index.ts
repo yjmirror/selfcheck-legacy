@@ -56,7 +56,7 @@ export {
 };
 
 export {
-  instanciate as __instanciate,
+  instantiate as __instantiate,
   getRuntimeVersion as __getRuntimeVersion,
 } from './runtimeHost';
 

@@ -1,6 +1,15 @@
 # Selfcheck - 교육부 자가진단 자동화 ![GitHub stars](https://img.shields.io/github/stars/yjmirror/selfcheck?style=social) [![npm version](https://badge.fury.io/js/selfcheck.svg)](https://badge.fury.io/js/selfcheck)
 
-## 🌟 20201214 비밀번호 인증방식 변경
+<!--BEGIN_STATUS-->
+
+## 2020년12월22일 테스트 결과: ✅ SUCCESS<br/>
+
+#### 런타임 버전: v116
+
+
+<!--END_STATUS-->
+
+### 🌟 20201214 비밀번호 인증방식 변경
 
 - !! 자가진단 서버가 비밀번호 확인이 필수로 변경됨에 따라 4자리 비밀번호를 반드시 입력해야 합니다
 

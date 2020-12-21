@@ -18,7 +18,7 @@ declare const __HOST_API: HOST_API_TYPE;
 declare const __RUNTIME_VERSION__: string;
 export const version = __RUNTIME_VERSION__;
 
-const { crypto, axios, Buffer, SelfcheckError } = __HOST_API;
+const { crypto, axios, Buffer, SelfcheckError, __ } = __HOST_API;
 
 function initialize(user: User) {
   const instance = axios.create({
@@ -45,6 +45,10 @@ function initialize(user: User) {
     },
   });
   const { school, area, name, birthday, password } = user;
+
+  if (!name || !area || !birthday || !password || !school)
+    throw new SelfcheckError('INVALID_USER');
+
   let orgCode: string;
   let token: string;
 
@@ -59,7 +63,7 @@ function initialize(user: User) {
       baseURL: 'https://hcs.eduro.go.kr',
     });
     if (!data || !data.schulList || !data.schulList.length) {
-      throw new SelfcheckError('cannot find school');
+      throw new SelfcheckError('CANNOT_FIND_SCHOOL');
     }
     const schoolItem = data.schulList[0];
     instance.defaults.baseURL = normalizeUrl(schoolItem.atptOfcdcConctUrl);
@@ -75,8 +79,7 @@ function initialize(user: User) {
       loginType: 'school',
     };
     const r = await instance.post<API_TYPE.FIND_USER>(FIND_USER, request);
-    if (!r.data || !r.data.token)
-      throw new SelfcheckError('cannot find school');
+    if (!r.data || !r.data.token) throw new SelfcheckError('CANNOT_FIND_USER');
     const tempToken = r.data.token;
 
     const pw = await instance.post<string>(
@@ -125,7 +128,7 @@ function initialize(user: User) {
       request
     );
     if (data && data.registerDtm) return data;
-    else throw new SelfcheckError('abnormal response from server');
+    else throw new SelfcheckError('RESPONSE_ERROR');
   }
 
   return {
