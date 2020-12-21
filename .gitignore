@@ -115,8 +115,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-mocks.js
-__test__.js
+__testdata__.js
+__autotest__.js
 
 lib/types/
 lib/selfcheck.js
