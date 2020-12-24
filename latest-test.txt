@@ -1,4 +1,0 @@
-Success at Wed Dec 23 2020 07:00:00 GMT+0900 (Korean Standard Time)
-
-Runtime Version: v118
-{ registerDtm: '2020-12-23 07:00:00', inveYmd: '2020-12-23 07:00:00' }

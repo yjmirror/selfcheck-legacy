@@ -116,7 +116,3 @@ dist
 .pnp.*
 
 __testdata__.js
-
-lib/types/
-lib/selfcheck.js
-lib/selfcheck.mjs
