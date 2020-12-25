@@ -1,3 +1,7 @@
+# THIS VERSION IS DEPRECATED!!!
+
+## MIGRATED TO [NEW VERSION](https://github.com/yj01jung/selfcheck)
+
 # Selfcheck - 교육부 자가진단 자동화 ![GitHub stars](https://img.shields.io/github/stars/yjmirror/selfcheck?style=social) [![npm version](https://badge.fury.io/js/selfcheck.svg)](https://badge.fury.io/js/selfcheck)
 
 ## 최소 지원 버전: v7.0.0
@@ -7,7 +11,6 @@
 ## 2020년12월23일 테스트 결과: ✅ SUCCESS<br/>
 
 #### 런타임 버전: v118
-
 
 <!--END_STATUS-->
 
